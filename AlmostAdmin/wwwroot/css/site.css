@@ -21,6 +21,11 @@
     width: 100%;
 }
 
+.page-main-text {
+    font-size: 20px;
+    font-family:'Times New Roman', Times, serif;
+}
+
 /* QR code generator */
 #qrCode {
     margin: 15px;
