@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using AlmostAdmin.Models;
 using AlmostAdmin.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AlmostAdmin.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         public IActionResult Index()

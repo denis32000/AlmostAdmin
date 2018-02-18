@@ -15,6 +15,11 @@ namespace AlmostAdmin.Data
             _processor = new object();
         }
 
+        public void Educate(int key, string answer)
+        {
+            throw new NotImplementedException();
+        }
+
         public IIntelligenceProcessedData ProcessData(string dataToProcess)
         {
             throw new NotImplementedException();

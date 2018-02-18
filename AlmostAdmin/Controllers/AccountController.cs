@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AlmostAdmin.Controllers
 {
+    // TODO: UserController https://metanit.com/sharp/aspnet5/16.7.php
+
     public class AccountController : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -25,6 +27,10 @@ namespace AlmostAdmin.Controllers
         [HttpGet]
         public IActionResult Register()
         {
+            if(User.Identity.IsAuthenticated)
+            {
+                // TODO:
+            }
             return View();
         }
 
@@ -65,6 +71,10 @@ namespace AlmostAdmin.Controllers
         [HttpGet]
         public IActionResult Login(string returnUrl = null)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                // TODO:
+            }
             var loginViewModel = new LoginViewModel { ReturnUrl = returnUrl };
             return View(loginViewModel);
         }
@@ -98,12 +108,15 @@ namespace AlmostAdmin.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [HttpGet]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOff()
         {
-            // удаляем аутентификационные куки
-            await _signInManager.SignOutAsync();
+            if (User.Identity.IsAuthenticated)
+            {
+                // удаляем аутентификационные куки
+                await _signInManager.SignOutAsync();
+            }
             return RedirectToAction("Index", "Home");
         }
     }

@@ -1,4 +1,7 @@
 ﻿@model AlmostAdmin.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Регистрация";
+}
 
 <h2>Регистрация нового пользователя</h2>
 
@@ -32,3 +35,7 @@
         <input type="submit" value="Регистрация" />
     </div>
 </form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

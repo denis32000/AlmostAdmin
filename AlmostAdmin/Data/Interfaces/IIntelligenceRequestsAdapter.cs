@@ -8,5 +8,6 @@ namespace AlmostAdmin.Data
     public interface IIntelligenceRequestsAdapter
     {
         IIntelligenceProcessedData ProcessData(string dataToProcess); // кинули запрос на обработку и получили какое то значение, которым общается ИИ
+        void Educate(int key, string answer);
     }
 }

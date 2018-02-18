@@ -1,0 +1,11 @@
+C:\Users\Denis32\Documents\Visual Studio 2017\Projects\AlmostAdmin\DataProcessor\bin\Debug\netcoreapp2.0\DataProcessor.deps.json
+C:\Users\Denis32\Documents\Visual Studio 2017\Projects\AlmostAdmin\DataProcessor\bin\Debug\netcoreapp2.0\DataProcessor.runtimeconfig.json
+C:\Users\Denis32\Documents\Visual Studio 2017\Projects\AlmostAdmin\DataProcessor\bin\Debug\netcoreapp2.0\DataProcessor.runtimeconfig.dev.json
+C:\Users\Denis32\Documents\Visual Studio 2017\Projects\AlmostAdmin\DataProcessor\bin\Debug\netcoreapp2.0\DataProcessor.dll
+C:\Users\Denis32\Documents\Visual Studio 2017\Projects\AlmostAdmin\DataProcessor\bin\Debug\netcoreapp2.0\DataProcessor.pdb
+C:\Users\Denis32\Documents\Visual Studio 2017\Projects\AlmostAdmin\DataProcessor\obj\Debug\netcoreapp2.0\DataProcessor.csprojResolveAssemblyReference.cache
+C:\Users\Denis32\Documents\Visual Studio 2017\Projects\AlmostAdmin\DataProcessor\obj\Debug\netcoreapp2.0\DataProcessor.csproj.CoreCompileInputs.cache
+C:\Users\Denis32\Documents\Visual Studio 2017\Projects\AlmostAdmin\DataProcessor\obj\Debug\netcoreapp2.0\DataProcessor.AssemblyInfoInputs.cache
+C:\Users\Denis32\Documents\Visual Studio 2017\Projects\AlmostAdmin\DataProcessor\obj\Debug\netcoreapp2.0\DataProcessor.AssemblyInfo.cs
+C:\Users\Denis32\Documents\Visual Studio 2017\Projects\AlmostAdmin\DataProcessor\obj\Debug\netcoreapp2.0\DataProcessor.dll
+C:\Users\Denis32\Documents\Visual Studio 2017\Projects\AlmostAdmin\DataProcessor\obj\Debug\netcoreapp2.0\DataProcessor.pdb

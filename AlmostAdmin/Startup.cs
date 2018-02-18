@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AlmostAdmin.Data;
 using AlmostAdmin.Models;
+using AlmostAdmin.Repositories;
+using AlmostAdmin.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -27,6 +29,9 @@ namespace AlmostAdmin
         {
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddTransient<MainRepository>();
+            services.AddTransient<MainService>();
 
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationContext>();
