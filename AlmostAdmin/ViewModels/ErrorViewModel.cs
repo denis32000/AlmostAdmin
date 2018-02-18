@@ -1,6 +1,6 @@
 using System;
 
-namespace AlmostAdmin.Models
+namespace AlmostAdmin.ViewModels
 {
     public class ErrorViewModel
     {

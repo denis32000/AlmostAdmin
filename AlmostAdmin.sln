@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlmostAdmin", "AlmostAdmin\AlmostAdmin.csproj", "{AEC9F17E-C943-4DD0-BD8F-9B69C7FAF11A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProcessor", "DataProcessor\DataProcessor.csproj", "{8954E7C2-A452-4E2E-A2BD-2638F113FD8D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{AEC9F17E-C943-4DD0-BD8F-9B69C7FAF11A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEC9F17E-C943-4DD0-BD8F-9B69C7FAF11A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEC9F17E-C943-4DD0-BD8F-9B69C7FAF11A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8954E7C2-A452-4E2E-A2BD-2638F113FD8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8954E7C2-A452-4E2E-A2BD-2638F113FD8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8954E7C2-A452-4E2E-A2BD-2638F113FD8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8954E7C2-A452-4E2E-A2BD-2638F113FD8D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
