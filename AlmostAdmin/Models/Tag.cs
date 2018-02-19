@@ -1,26 +1,23 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AlmostAdmin.Models
 {
-    public class Answer
+    public class Tag
     {
-        public Answer()
+        public Tag()
         {
-            Questions = new List<Question>();
+            Questions = new List<QuestionTag>();
         }
 
         [Key]
         public int Id { get; set; }
         public string Text { get; set; }
-        public DateTime Date { get; set; }
 
         public int ProjectId { get; set; }
         public Project Project { get; set; }
 
-        public ICollection<Question> Questions { get; set; }
+        public ICollection<QuestionTag> Questions { get; set; }
     }
 }

@@ -30,6 +30,7 @@ namespace AlmostAdmin.Controllers
             return View(listOfQuestions);
         }
 
+        [HttpGet]
         public IActionResult Answers()
         {
             var listOfQuestions = _mainService.GetListOfAnswers();

@@ -8,12 +8,25 @@ namespace AlmostAdmin.Models
 {
     public class Question
     {
+        public Question()
+        {
+            Tags = new List<QuestionTag>();
+        }
+
         [Key]
         public int Id { get; set; }
         public string Text { get; set; }
         public string InteligenceValue { get; set; }
 
+        public DateTime Date { get; set; }
+        public bool AnsweredByHuman { get; set; }
+        
         public int AnswerId { get; set; }
         public Answer Answer { get; set; }
+
+        public int ProjectId { get; set; }
+        public Project Project { get; set; }
+
+        public ICollection<QuestionTag> Tags { get; set; }
     }
 }
