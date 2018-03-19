@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AlmostAdmin.Models;
 using AlmostAdmin.Services;
+using AlmostAdmin.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -35,8 +36,32 @@ namespace AlmostAdmin.Controllers
                 .Where(p => p.UserProjects.FirstOrDefault(up => up.UserId == user.Id) != null)
                 .ToList();
 
-            return View(projects);
+            if (projects.Any())
+            {
+                return View(projects);
+            }
+
+            return RedirectToAction("CreateProject");
         }
         
+        public IActionResult CreateProject()
+        {
+            return View("Create");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProject(ProjectViewModel projectModel)
+        {
+            // TODO: use service instead
+            var project = new Project
+            {
+                Name = projectModel.Name
+            };
+
+            _applicationContext.Projects.Add(project);
+            await _applicationContext.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
     }
 }

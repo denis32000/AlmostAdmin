@@ -1,0 +1,28 @@
+﻿@model AlmostAdmin.ViewModels.ProjectViewModel
+@{
+    ViewData["Title"] = "Создание проекта";
+}
+
+<h2>Создание нового Проекта</h2>
+
+<form method="post" asp-controller="Cabinet" asp-action="CreateProject">
+    
+    <div asp-validation-summary="ModelOnly"></div>
+
+    <div>
+        <label asp-for="Name"></label><br />
+        <input asp-for="Name" />
+        <span asp-validation-for="Name"></span>
+    </div>
+    <p style="color:yellowgreen">
+    // TODO: тут будет поиск по почтам пользователей и кнопка добавить<br/>
+    которая добавляет пользователей в список и отправляет в контроллер :)</p>
+
+    <div>
+        <input type="submit" value="Создать" />
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
