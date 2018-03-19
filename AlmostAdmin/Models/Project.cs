@@ -7,10 +7,10 @@ namespace AlmostAdmin.Models
     {
         public Project()
         {
-            Users = new List<User>();
+            UserProjects = new List<UserProject>();
             Questions = new List<Question>();
-            Answers = new List<Answer>();
-            Tags = new List<Tag>();
+            //Answers = new List<Answer>();
+            //Tags = new List<Tag>();
         }
 
         [Key]
@@ -19,9 +19,9 @@ namespace AlmostAdmin.Models
         public string Password { get; set; }
         public string Name { get; set; }
 
-        public ICollection<User> Users { get; set; }
-        public ICollection<Question> Questions { get; set; }
-        public ICollection<Answer> Answers { get; set; }
-        public ICollection<Tag> Tags { get; set; }
+        public virtual ICollection<UserProject> UserProjects { get; set; }
+        public virtual ICollection<Question> Questions { get; set; }
+        //public virtual ICollection<Answer> Answers { get; set; }
+        //public virtual ICollection<Tag> Tags { get; set; }
     }
 }

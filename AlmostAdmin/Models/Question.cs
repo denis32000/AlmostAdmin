@@ -10,7 +10,7 @@ namespace AlmostAdmin.Models
     {
         public Question()
         {
-            Tags = new List<QuestionTag>();
+            QuestionTags = new List<QuestionTag>();
         }
 
         [Key]
@@ -21,12 +21,12 @@ namespace AlmostAdmin.Models
         public DateTime Date { get; set; }
         public bool AnsweredByHuman { get; set; }
         
-        public int AnswerId { get; set; }
+        public int? AnswerId { get; set; }
         public Answer Answer { get; set; }
 
         public int ProjectId { get; set; }
         public Project Project { get; set; }
 
-        public ICollection<QuestionTag> Tags { get; set; }
+        public virtual ICollection<QuestionTag> QuestionTags { get; set; }
     }
 }

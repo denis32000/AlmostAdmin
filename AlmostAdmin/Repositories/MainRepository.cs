@@ -14,5 +14,10 @@ namespace AlmostAdmin.Repositories
         {
             _applicationContext = applicationContext;
         }
+
+        internal User GetUserByEmail(string userEmail)
+        {
+            return _applicationContext.Users.FirstOrDefault(u => u.Email == userEmail);
+        }
     }
 }

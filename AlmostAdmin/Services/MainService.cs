@@ -1,7 +1,9 @@
-﻿using AlmostAdmin.Repositories;
+﻿using AlmostAdmin.Models;
+using AlmostAdmin.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace AlmostAdmin.Services
@@ -23,6 +25,11 @@ namespace AlmostAdmin.Services
         internal object GetListOfAnswers()
         {
             throw new NotImplementedException();
+        }
+
+        internal User GetUserFromClaims(ClaimsPrincipal user)
+        {
+            return _mainRepository.GetUserByEmail(user.Identity.Name);
         }
     }
 }

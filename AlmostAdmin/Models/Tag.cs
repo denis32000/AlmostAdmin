@@ -8,16 +8,16 @@ namespace AlmostAdmin.Models
     {
         public Tag()
         {
-            Questions = new List<QuestionTag>();
+            QuestionTags = new List<QuestionTag>();
         }
 
         [Key]
         public int Id { get; set; }
         public string Text { get; set; }
 
-        public int ProjectId { get; set; }
-        public Project Project { get; set; }
+        //public int ProjectId { get; set; }
+        //public Project Project { get; set; }
 
-        public ICollection<QuestionTag> Questions { get; set; }
+        public ICollection<QuestionTag> QuestionTags { get; set; }
     }
 }

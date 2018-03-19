@@ -13,8 +13,32 @@ namespace AlmostAdmin.Controllers
     [AllowAnonymous]
     public class HomeController : Controller
     {
+        // TODO: FOR TESTING PURPOSE, MOVE THIS METHODS TO REPOSITORY
+        ////////////////////////////////////////////////////////
+        private ApplicationContext _applicationContext;
+
+        public HomeController(ApplicationContext applicationContext)
+        {
+            _applicationContext = applicationContext;
+        }
+        ////////////////////////////////////////////////////////
+
         public IActionResult Index()
         {
+            return View();
+        }
+
+        public IActionResult Init()
+        {
+            // TODO: reset all answers. Debug command
+            //var project
+            //_applicationContext.Projects.Add();
+            return View();
+        }
+
+        public IActionResult Reset()
+        {
+            // TODO: reset all answers. Debug command
             return View();
         }
 

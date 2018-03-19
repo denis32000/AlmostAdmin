@@ -12,9 +12,9 @@ namespace AlmostAdmin.ViewModels
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Required]
-        [Display(Name = "Название Вашего веб-ресурса")]
-        public string SiteName { get; set; }
+        //[Required]
+        //[Display(Name = "Название Вашего веб-ресурса")]
+        //public string SiteName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]

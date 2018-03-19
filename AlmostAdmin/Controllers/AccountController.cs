@@ -42,8 +42,8 @@ namespace AlmostAdmin.Controllers
                 var user = new User
                 {
                     Email = model.Email,
-                    UserName = model.Email,
-                    //TODO: SiteName = model.SiteName,
+                    UserName = "Неизвестно",
+                    
                     AdminLevel = 0
                 };
 
@@ -53,7 +53,7 @@ namespace AlmostAdmin.Controllers
                 {
                     // установка куки
                     await _signInManager.SignInAsync(user, false);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Cabinet");
                 }
                 else
                 {
