@@ -42,8 +42,7 @@ namespace AlmostAdmin.Controllers
                 var user = new User
                 {
                     Email = model.Email,
-                    UserName = "Неизвестно",
-                    
+                    UserName = model.Email,
                     AdminLevel = 0
                 };
 

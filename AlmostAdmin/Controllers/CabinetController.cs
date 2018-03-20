@@ -28,13 +28,13 @@ namespace AlmostAdmin.Controllers
             var user = _mainService.GetUserFromClaims(User);
 
             if (user == null)
-                return View("Error");
+                return RedirectToAction("Error", "Home");
 
             var projects = _applicationContext.Projects
                 .Include(p => p.UserProjects)
-                    .ThenInclude(up => up.User)
-                .Where(p => p.UserProjects.FirstOrDefault(up => up.UserId == user.Id) != null)
-                .ToList();
+                    .ThenInclude(up => up.User).ToList();
+                //.Where(p => p.UserProjects.FirstOrDefault(up => up.UserId == user.Id) != null)
+                //.ToList();
 
             if (projects.Any())
             {
@@ -52,16 +52,24 @@ namespace AlmostAdmin.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProject(ProjectViewModel projectModel)
         {
+            var user = _mainService.GetUserFromClaims(User);
+
             // TODO: use service instead
             var project = new Project
             {
                 Name = projectModel.Name
             };
 
+            var userProject = new UserProject
+            {
+                Project = project,
+                User = user
+            };
+
             _applicationContext.Projects.Add(project);
             await _applicationContext.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Cabinet");
         }
     }
 }

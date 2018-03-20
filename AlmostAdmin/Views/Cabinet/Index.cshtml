@@ -9,7 +9,7 @@
     // TODO: тут будет появляться форма с вводом почты создателя проекта и проверки на сервере зареган ли он у нас и отправка ему имейла
 </p>
 
-    @foreach (var project in Model)
-    {
-        <a asp-controller="Panel" asp-action="Index" asp-route="@project.Id">@project.Name</a>
-    }
+@foreach (var project in Model)
+{
+    <a asp-controller="Panel" asp-action="Index" asp-route-projectId="@project.Id">@project.Name</a> <br/>
+}

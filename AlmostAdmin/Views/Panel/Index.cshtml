@@ -1,4 +1,4 @@
-﻿
+﻿@model Project
 @{
     ViewData["Title"] = "Index";
 }
@@ -8,5 +8,93 @@
     <li><a asp-action="Answers">Список ответов за всё время</a></li>
 </ol>
 
-<h2>Index</h2>
+<table>
+    @foreach (var question in Model.Questions)
+    {
+        <tr>
+            <td>
+                @question.Text [
+                @foreach (var tag in question.QuestionTags)
+                {
+                    <span>@tag.Tag.Text,</span>
+                }]
+            </td>
+            <td>
+                @if (question.AnsweredByHuman)
+                {
+                    <span>
+                        (Человек): @question.Answer.Text
+                        <button onclick="answerOnQuestion(@question.Id)">
+                            Изменить ответ
+                        </button>
+                        // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
+                    </span>
+                }
+                else if (question.Answer != null)
+                {
+                    <span>
+                        (Система): @question.Answer.Text
+                        <button onclick="answerOnQuestion(@question.Id)">
+                            Изменить ответ
+                        </button>
+                        // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
+                    </span>
+                }
+                else
+                {
+                    <span>
+                        Этот вопрос еще неотвеченный!
+                        <button onclick="answerOnQuestion(@question.Id)">
+                            Ответить
+                        </button>
+                        // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
+                    </span>
+                }
+            </td>
+        </tr>
+    }
+</table>
 
+<form asp-action="CreateQuestion"
+      data-ajax-begin="onBegin" data-ajax-complete="onComplete"
+      data-ajax-failure="onFailed" data-ajax-success="onSuccess"
+      data-ajax="true" data-ajax-method="POST">
+
+    <input name="projectId" type="hidden" value="@Model.Id" />
+    <input name="questionText" title="Введите текст вопроса" />
+    <button type="submit">Создать</button>
+</form>
+
+
+<div id="prompt-form-container">
+    <form id="prompt-form">
+        <div id="prompt-message"></div>
+        <input name="text" type="text">
+        <input type="submit" value="Ок">
+        <input type="button" name="cancel" value="Отмена">
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        function onComplete() {
+
+        }
+
+        function answerOnQuestion(questionId) {
+            showPrompt("Введите ответ на вопрос:", function (value) {
+                $.post("Answer",
+                    {
+                        questionId: this.questionId,
+                        answerText: this.value
+                    },
+                    function (response) {
+                        // TODO: make ajax updated table
+                        window.location = window.location;
+                    });
+            });
+        }
+    </script>
+}
