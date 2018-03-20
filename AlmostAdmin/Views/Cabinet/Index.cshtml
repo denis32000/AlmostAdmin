@@ -3,7 +3,7 @@
     ViewData["Title"] = "Главная страница";
 }
 
-<p>Проекты с которыми связан Ваш аккаунт.</p> 
+<p>Проекты с которыми связан Ваш аккаунт.</p>
 <p style="font-style:italic">Eсли Вы не можете найти среди перечисленных нужный - запросите приглашение у создателя проекта!</p>
 <p style="color:yellowgreen">
     // TODO: тут будет появляться форма с вводом почты создателя проекта и проверки на сервере зареган ли он у нас и отправка ему имейла
@@ -11,5 +11,7 @@
 
 @foreach (var project in Model)
 {
-    <a asp-controller="Panel" asp-action="Index" asp-route-projectId="@project.Id">@project.Name</a> <br/>
+    <a asp-controller="Panel" asp-action="Index" asp-route-projectId="@project.Id">@project.Name</a> <br />
 }
+
+<a asp-action="CreateProject">Создать новый проект</a>

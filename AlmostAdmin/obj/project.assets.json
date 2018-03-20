@@ -13123,7 +13123,8 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Fancy\\.nuget\\packages\\": {},
+    "C:\\Users\\Denis32\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
@@ -13132,18 +13133,20 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "C:\\Users\\Fancy\\Source\\Repos\\AlmostAdmin\\AlmostAdmin\\AlmostAdmin.csproj",
+      "projectUniqueName": "C:\\Users\\Denis32\\Documents\\Visual Studio 2017\\Projects\\AlmostAdmin\\AlmostAdmin\\AlmostAdmin.csproj",
       "projectName": "AlmostAdmin",
-      "projectPath": "C:\\Users\\Fancy\\Source\\Repos\\AlmostAdmin\\AlmostAdmin\\AlmostAdmin.csproj",
-      "packagesPath": "C:\\Users\\Fancy\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Fancy\\Source\\Repos\\AlmostAdmin\\AlmostAdmin\\obj\\",
+      "projectPath": "C:\\Users\\Denis32\\Documents\\Visual Studio 2017\\Projects\\AlmostAdmin\\AlmostAdmin\\AlmostAdmin.csproj",
+      "packagesPath": "C:\\Users\\Denis32\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Denis32\\Documents\\Visual Studio 2017\\Projects\\AlmostAdmin\\AlmostAdmin\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Fancy\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\Denis32\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.0"

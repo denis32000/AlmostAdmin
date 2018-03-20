@@ -36,6 +36,7 @@
 
                     @if (User.Identity.IsAuthenticated)
                     {
+                        <li><a asp-area="" asp-controller="Cabinet" asp-action="Index">Кабинет</a></li>
                         <li><a asp-area="" asp-controller="Account" asp-action="LogOff">Выход</a></li>
                     }
                     else

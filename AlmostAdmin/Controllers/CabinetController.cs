@@ -55,17 +55,17 @@ namespace AlmostAdmin.Controllers
             var user = _mainService.GetUserFromClaims(User);
 
             // TODO: use service instead
-            var project = new Project
-            {
-                Name = projectModel.Name
-            };
-
             var userProject = new UserProject
             {
-                Project = project,
                 User = user
             };
 
+            var project = new Project
+            {
+                Name = projectModel.Name,
+                UserProjects = new List<UserProject> { userProject }
+            };
+            
             _applicationContext.Projects.Add(project);
             await _applicationContext.SaveChangesAsync();
 

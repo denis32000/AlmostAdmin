@@ -25,31 +25,67 @@ namespace AlmostAdmin.Controllers
         public IActionResult Index(int projectId)
         {
             var project = _applicationContext.Projects
-                .Include(p => p.Questions)
+                //.Include(p => p.Questions)
                 .FirstOrDefault(p => p.Id == projectId);
 
             if (project == null)
                 return RedirectToAction("Error", "Home");
+
+            project.Questions = _applicationContext.Questions
+                .Include(q => q.Answer)
+                .Include(q => q.QuestionTags)
+                .Where(q => q.Project.Id == projectId)
+                .ToList();
             
             return View(project);
         }
 
-        [HttpGet]
-        public IActionResult Answer()
+        [HttpPost]
+        public async Task<IActionResult> Answer(int projectId, int questionId, string answerText)
         {
-            var listOfQuestions = _mainService.GetListOfAnswers();
-            return View(listOfQuestions);
-        }
+            if (string.IsNullOrEmpty(answerText))
+                return BadRequest();
 
-        public async Task<bool> CreateQuestion(int projectId, string questionText)// TODO: , ICollection<string> tags)
-        {
-            if (string.IsNullOrEmpty(questionText))
-                return false;
-
-            var project = _applicationContext.Projects.FirstOrDefault(p => p.Id == projectId);
+            var project = _applicationContext.Projects
+                .Include(p => p.Questions)
+                .FirstOrDefault(p => p.Id == projectId);
 
             if (project == null)
-                return false;
+                return BadRequest();
+
+            var answer = new Answer
+            {
+                Date = DateTime.Now,
+                Text = answerText,
+                Project = project
+            };
+
+            var question = project.Questions.FirstOrDefault(q => q.Id == questionId);
+
+            if (question == null)
+                return BadRequest();
+
+            question.Answer = answer;
+            question.AnsweredByHuman = true;
+
+            _applicationContext.Answers.Add(answer);
+            await _applicationContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateQuestion(int projectId, string questionText)// TODO: , ICollection<string> tags)
+        {
+            if (string.IsNullOrEmpty(questionText))
+                return BadRequest();
+
+            var project = _applicationContext.Projects
+                .Include(p => p.Questions)
+                .FirstOrDefault(p => p.Id == projectId);
+
+            if (project == null)
+                return BadRequest();
 
             var questionTags = new List<QuestionTag>();
             
@@ -64,7 +100,7 @@ namespace AlmostAdmin.Controllers
             _applicationContext.Questions.Add(question);
             await _applicationContext.SaveChangesAsync();
 
-            return true;
+            return Ok();
         }
 
 
