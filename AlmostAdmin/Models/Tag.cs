@@ -18,6 +18,6 @@ namespace AlmostAdmin.Models
         //public int ProjectId { get; set; }
         //public Project Project { get; set; }
 
-        public ICollection<QuestionTag> QuestionTags { get; set; }
+        public virtual ICollection<QuestionTag> QuestionTags { get; set; }
     }
 }

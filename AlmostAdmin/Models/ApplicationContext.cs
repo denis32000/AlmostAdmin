@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AlmostAdmin.Models;
 
 namespace AlmostAdmin.Models
 {
@@ -66,5 +67,7 @@ namespace AlmostAdmin.Models
 
             base.OnModelCreating(modelBuilder);
         }
+
+        public DbSet<AlmostAdmin.Models.User> User { get; set; }
     }
 }

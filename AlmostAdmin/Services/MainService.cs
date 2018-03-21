@@ -27,9 +27,19 @@ namespace AlmostAdmin.Services
             throw new NotImplementedException();
         }
 
-        internal User GetUserFromClaims(ClaimsPrincipal user)
+        internal User GetUserByClaims(ClaimsPrincipal user)
         {
             return _mainRepository.GetUserByEmail(user.Identity.Name);
+        }
+
+        internal User GetUserByEmail(string userEmail)
+        {
+            return _mainRepository.GetUserByEmail(userEmail);
+        }
+        
+        internal Project GetProjectById(int projectId)
+        {
+            return _mainRepository.GetProjectById(projectId);
         }
     }
 }

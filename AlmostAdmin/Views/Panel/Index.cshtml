@@ -1,6 +1,8 @@
 ﻿@model Project
 @{
     ViewData["Title"] = "Index";
+
+    var owner = Model.UserProjects.First().User;
 }
 
 <ol>
@@ -8,19 +10,37 @@
     <li><a asp-action="Answers">Список ответов за всё время</a></li>
 </ol>
 
-<table>
-    @foreach (var question in Model.Questions)
-    {
-        <tr>
-            <td>
-                @question.Text [
-                @foreach (var tag in question.QuestionTags)
+<div class="center-block btn-group-vertical">
+    
+        <div>Сортировка вопросов</div>
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+            Dropdown Example
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a href="#">HTML</a></li>
+            <li><a href="#">CSS</a></li>
+            <li><a href="#">JavaScript</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <table class="table table-bordered">
+            @foreach (var question in Model.Questions)
+        {
+            <tr>
+                <td>
+                    @question.Text [
+                    @foreach (var tag in question.QuestionTags)
                 {
                     <span>@tag.Tag.Text,</span>
-                }]
-            </td>
-            <td>
-                @if (question.AnsweredByHuman)
+            }]
+                </td>
+                <td>
+                    @if (question.AnsweredByHuman)
                 {
                     <span>
                         (Человек): @question.Answer.Text
@@ -29,31 +49,42 @@
                         </button>
                         // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
                     </span>
-                }
-                else if (question.Answer != null)
-                {
-                    <span>
-                        (Система): @question.Answer.Text
-                        <button onclick="answerOnQuestion(@question.Id)">
-                            Изменить ответ
-                        </button>
-                        // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
-                    </span>
-                }
-                else
-                {
-                    <span>
-                        Этот вопрос еще без ответа!
-                        <button onclick="answerOnQuestion(@question.Id)">
-                            Ответить
-                        </button>
-                        // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
-                    </span>
-                }
-            </td>
-        </tr>
+            }
+            else if (question.Answer != null)
+            {
+                <span>
+                    (Система): @question.Answer.Text
+                    <button onclick="answerOnQuestion(@question.Id)">
+                        Изменить ответ
+                    </button>
+                    // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
+                </span>
+        }
+        else
+        {
+            <span>
+                Этот вопрос еще без ответа!
+                <button onclick="answerOnQuestion(@question.Id)">
+                    Ответить
+                </button>
+                // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
+            </span>
     }
-</table>
+                </td>
+            </tr>
+    }
+        </table>
+    </div>
+
+    <div class="col-md-4">
+        Участники проекта 
+        @if (owner.Email.Equals(User.Identity.Name))
+        {
+            <button class="btn btn-default" onclick="inviteNewUsers(@Model.Id)">Пригласить</button>
+        }
+        @Html.Partial("_ProjectUsers", Model.UserProjects.Select(up => up.User))
+    </div>
+</div>
 
 <form onsubmit="createNewQuestion(event)" id="myForm">
     <input name="projectId" type="hidden" value="@Model.Id" />
@@ -75,6 +106,25 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
 <script>
+    function inviteNewUsers(projectId) {
+        showPrompt("Введите почту:", function (emailToInvite) {
+            $.post('@Url.Action("InviteUser")',
+                {
+                    projectId: projectId,
+                    emailToInvite: emailToInvite
+                },
+                function (response) {
+                    if (!response.success) {
+                        alert(response.message);
+                        return;
+                    }
+
+                    alert("Пользователь успешно добавлен в проект!");
+                    window.location = window.location;
+                });
+        });
+    }
+
     function createNewQuestion(event) {
         event.preventDefault();
 
@@ -82,23 +132,23 @@
             function () {
                 window.location = window.location;
         });
-     }
+    }
 
-        // TODO: move this function to global js file
-        function answerOnQuestion(questionId) {
-            showPrompt("Введите ответ на вопрос:", function (value) {
-                $.post('@Url.Action("Answer")',
-                    {
-                        projectId: @Model.Id,
-                        questionId: questionId,
-                        answerText: value
-                    },
-                    function (response) {
-                        // TODO: make ajax updated table
-                        window.location = window.location;
-                    });
-            });
-        }
+    // TODO: move this function to global js file
+    function answerOnQuestion(questionId) {
+        showPrompt("Введите ответ на вопрос:", function (value) {
+            $.post('@Url.Action("Answer")',
+                {
+                    projectId: @Model.Id,
+                    questionId: questionId,
+                    answerText: value
+                },
+                function (response) {
+                    // TODO: make ajax updated table
+                    window.location = window.location;
+                });
+        });
+    }
 </script>
 }
 <!--

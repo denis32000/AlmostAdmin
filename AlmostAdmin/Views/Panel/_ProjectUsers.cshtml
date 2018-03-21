@@ -1,0 +1,18 @@
+﻿@model IEnumerable<AlmostAdmin.Models.User>
+
+<div>
+    <table class="table table-bordered">
+        @foreach(var user in Model)
+        {
+            <tr>
+                <td>
+                    @user.Email
+                    @if(user.Email == User.Identity.Name)
+                    {
+                        @:(<span style="color:forestgreen">Вы</span>)
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

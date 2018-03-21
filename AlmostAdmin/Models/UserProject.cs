@@ -6,9 +6,9 @@ namespace AlmostAdmin.Models
     {
         //[Navigation("Id")]
         public string UserId { get; set; }
-        public User User { get; set; }
+        public virtual User User { get; set; }
 
         public int ProjectId { get; set; }
-        public Project Project { get; set; }
+        public virtual Project Project { get; set; }
     }
 }

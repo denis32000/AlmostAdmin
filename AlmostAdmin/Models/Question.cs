@@ -22,10 +22,10 @@ namespace AlmostAdmin.Models
         public bool AnsweredByHuman { get; set; }
         
         public int? AnswerId { get; set; }
-        public Answer Answer { get; set; }
+        public virtual Answer Answer { get; set; }
 
         public int ProjectId { get; set; }
-        public Project Project { get; set; }
+        public virtual Project Project { get; set; }
 
         public virtual ICollection<QuestionTag> QuestionTags { get; set; }
     }

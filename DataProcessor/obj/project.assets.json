@@ -664,8 +664,7 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Denis32\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\": {},
+    "C:\\Users\\Fancy\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
@@ -674,20 +673,18 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "C:\\Users\\Denis32\\Documents\\Visual Studio 2017\\Projects\\AlmostAdmin\\DataProcessor\\DataProcessor.csproj",
+      "projectUniqueName": "C:\\Users\\Fancy\\Source\\Repos\\AlmostAdmin\\DataProcessor\\DataProcessor.csproj",
       "projectName": "DataProcessor",
-      "projectPath": "C:\\Users\\Denis32\\Documents\\Visual Studio 2017\\Projects\\AlmostAdmin\\DataProcessor\\DataProcessor.csproj",
-      "packagesPath": "C:\\Users\\Denis32\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Denis32\\Documents\\Visual Studio 2017\\Projects\\AlmostAdmin\\DataProcessor\\obj\\",
+      "projectPath": "C:\\Users\\Fancy\\Source\\Repos\\AlmostAdmin\\DataProcessor\\DataProcessor.csproj",
+      "packagesPath": "C:\\Users\\Fancy\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Fancy\\Source\\Repos\\AlmostAdmin\\DataProcessor\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Denis32\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
+        "C:\\Users\\Fancy\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.0"

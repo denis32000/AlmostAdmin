@@ -25,7 +25,7 @@ namespace AlmostAdmin.Controllers
 
         public IActionResult Index()
         {
-            var user = _mainService.GetUserFromClaims(User);
+            var user = _mainService.GetUserByClaims(User);
 
             if (user == null)
                 return RedirectToAction("Error", "Home");
@@ -52,18 +52,18 @@ namespace AlmostAdmin.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProject(ProjectViewModel projectModel)
         {
-            var user = _mainService.GetUserFromClaims(User);
+            var user = _mainService.GetUserByClaims(User);
 
             // TODO: use service instead
-            var userProject = new UserProject
+            var userProjects = new List<UserProject>()
             {
-                User = user
+                new UserProject() { User = user }
             };
 
             var project = new Project
             {
                 Name = projectModel.Name,
-                UserProjects = new List<UserProject> { userProject }
+                UserProjects = userProjects
             };
             
             _applicationContext.Projects.Add(project);

@@ -19,8 +19,8 @@ namespace AlmostAdmin.Models
         public DateTime Date { get; set; }
 
         public int ProjectId { get; set; }
-        public Project Project { get; set; }
+        public virtual Project Project { get; set; }
 
-        public ICollection<Question> Questions { get; set; }
+        public virtual ICollection<Question> Questions { get; set; }
     }
 }

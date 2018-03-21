@@ -10,11 +10,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AlmostAdmin.Controllers
 {
+    public class Result
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; }
+    }
+
     [Authorize]
     public class PanelController : Controller
     {
         private MainService _mainService;
         private ApplicationContext _applicationContext;
+        private Project _project;
 
         public PanelController(MainService mainService, ApplicationContext applicationContext)
         {
@@ -24,20 +31,13 @@ namespace AlmostAdmin.Controllers
 
         public IActionResult Index(int projectId)
         {
-            var project = _applicationContext.Projects
-                //.Include(p => p.Questions)
-                .FirstOrDefault(p => p.Id == projectId);
+            _project = _mainService.GetProjectById(projectId);
 
-            if (project == null)
+            if (_project == null)
                 return RedirectToAction("Error", "Home");
 
-            project.Questions = _applicationContext.Questions
-                .Include(q => q.Answer)
-                .Include(q => q.QuestionTags)
-                .Where(q => q.Project.Id == projectId)
-                .ToList();
             
-            return View(project);
+            return View(_project);
         }
 
         [HttpPost]
@@ -103,19 +103,52 @@ namespace AlmostAdmin.Controllers
             return Ok();
         }
 
-
-        [HttpGet]
-        public IActionResult Questions()
+        [HttpPost]
+        public async Task<JsonResult> InviteUser(int projectId, string emailToInvite)
         {
-            var listOfQuestions = _mainService.GetListOfQuestions();
-            return View(listOfQuestions);
+            if (string.IsNullOrEmpty(emailToInvite))
+                return Json(new Result { Message = "Parameter emailToInvite" });
+
+            var project = _applicationContext.Projects
+                .Include(p => p.Questions)
+                .FirstOrDefault(p => p.Id == projectId);
+
+            if (project == null)
+                return Json(new Result { Message = "Parameter projectId" });
+
+            var user = _mainService.GetUserByEmail(emailToInvite);
+            if (user == null)
+                return Json(new Result { Message = "User with such email doesn't exist." });
+
+            var userProject = new UserProject
+            {
+                Project = project,
+                User = user
+            };
+
+            project.UserProjects.Add(userProject);
+            await _applicationContext.SaveChangesAsync();
+
+            return Json(new Result { Success = true });
         }
 
-        [HttpGet]
-        public IActionResult Answers()
-        {
-            var listOfQuestions = _mainService.GetListOfAnswers();
-            return View(listOfQuestions);
-        }
+        //public IActionResult ProjectUsers()
+        //{
+        //    return PartialView("", _project);
+        //}
+
+        //[HttpGet]
+        //public IActionResult Questions()
+        //{
+        //    var listOfQuestions = _mainService.GetListOfQuestions();
+        //    return View(listOfQuestions);
+        //}
+
+        //[HttpGet]
+        //public IActionResult Answers()
+        //{
+        //    var listOfQuestions = _mainService.GetListOfAnswers();
+        //    return View(listOfQuestions);
+        //}
     }
 }

@@ -64,6 +64,10 @@
 {
     <a class="btn-lg" asp-controller="Account" asp-action="Login">Начать работу</a>
 }
+else
+{
+    <a class="btn-lg" asp-controller="Cabinet" asp-action="Index">Перейти в личный кабинет</a>
+}
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
