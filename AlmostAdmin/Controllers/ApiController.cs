@@ -38,7 +38,8 @@ namespace AlmostAdmin.Controllers
             {
                 string answerJson;
                 var answer = new AnswerOnRequest();
-                var questionToApi = JsonConvert.DeserializeObject<QuestionToApi>(data);
+                var decodedData = CryptoUtils.Base64Decode(data);
+                var questionToApi = JsonConvert.DeserializeObject<QuestionToApi>(decodedData);
                 
                 if (questionToApi.IsModelValid())
                 {
@@ -47,7 +48,7 @@ namespace AlmostAdmin.Controllers
                     answerJson = JsonConvert.SerializeObject(answer);
                     return answerJson;
                 }
-
+                
                 if(!Utils.ValidUrl(questionToApi.StatusUrl))
                 {
                     answer.StatusCode = Models.Api.StatusCode.WrongStatusUrl;
@@ -61,20 +62,28 @@ namespace AlmostAdmin.Controllers
                         .ThenInclude(up => up.Project)
                     .FirstOrDefault(u => u.UserName == questionToApi.Login);
 
-                if(user == null || user.PasswordHash != questionToApi.PasswordHash) // Dont receive PASSWORD HASH!
+                if(user == null || user.PasswordHash != questionToApi.PasswordHash)
                 {
                     answer.StatusCode = Models.Api.StatusCode.WrongLoginPasswordCredentials;
                     answer.StatusMessage = "User with such email-password combination doesn't exist.";
                     answerJson = JsonConvert.SerializeObject(answer);
                     return answerJson;
                 }
-
+                
                 var userProject = user.UserProjects.FirstOrDefault(up => up.Project.Id == questionToApi.ProjectId);
 
                 if(userProject == null)
                 {
                     answer.StatusCode = Models.Api.StatusCode.WrongProjectId;
                     answer.StatusMessage = "Provided user doesn't consist in the project with such ID.";
+                    answerJson = JsonConvert.SerializeObject(answer);
+                    return answerJson;
+                }
+
+                if (!Utils.ValidateSignature(data, signature, userProject.Project.PrivateKey))
+                {
+                    answer.StatusCode = Models.Api.StatusCode.WrongSignature;
+                    answer.StatusMessage = "Signature is not valid. Check your PrivateKey and MD5 alghorithm.";
                     answerJson = JsonConvert.SerializeObject(answer);
                     return answerJson;
                 }

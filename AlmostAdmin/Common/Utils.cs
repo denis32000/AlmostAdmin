@@ -18,5 +18,16 @@ namespace AlmostAdmin.Common
             }
             return false;
         }
+
+        internal static bool ValidateSignature(string base64EncodedData, string signature, string privateKey)
+        {
+            //var base64DecodedData = CryptoUtils.Base64Decode(data);
+
+            var stringToBeHashed = privateKey + base64EncodedData + privateKey;
+            var sha1HashedString = CryptoUtils.HashSHA1(stringToBeHashed);
+            var base64EncodedSha1String = CryptoUtils.Base64Encode(sha1HashedString);
+
+            return base64EncodedSha1String == signature;
+        }
     }
 }

@@ -11,16 +11,18 @@ namespace AlmostAdmin.Data
 
         public IntelligenceRequestAdapter()
         {
-            // TODO: создаём instance обработчика данных
+            // TODO: создаём instance обработчика данных, в нашем случае SmartDataAnalizerByDenisShvetsov
             _processor = new object();
         }
 
+        /*
         public void Educate(int key, string answer)
         {
             throw new NotImplementedException();
         }
+        */
 
-        public IIntelligenceProcessedData ProcessData(string dataToProcess)
+        public async Task<IIntelligenceProcessedData> ProcessDataAsync(string dataToProcess)
         {
             throw new NotImplementedException();
         }
