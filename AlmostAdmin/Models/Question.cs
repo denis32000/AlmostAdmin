@@ -20,7 +20,8 @@ namespace AlmostAdmin.Models
 
         public DateTime Date { get; set; }
         public bool AnsweredByHuman { get; set; }
-        
+        public string StatusUrl { get; set; }
+
         public int? AnswerId { get; set; }
         public virtual Answer Answer { get; set; }
 

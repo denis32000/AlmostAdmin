@@ -37,6 +37,7 @@ namespace AlmostAdmin
                 .AddEntityFrameworkStores<ApplicationContext>();
 
             services.AddSingleton<IntelligenceRequestAdapter>();
+            services.AddSingleton<ProcessorService>();
 
             services.AddMvc();
         }

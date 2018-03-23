@@ -63,6 +63,7 @@ namespace AlmostAdmin.Controllers
             var project = new Project
             {
                 Name = projectModel.Name,
+                PrivateKey = Guid.NewGuid().ToString(),
                 UserProjects = userProjects
             };
             

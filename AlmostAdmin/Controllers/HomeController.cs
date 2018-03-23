@@ -28,6 +28,12 @@ namespace AlmostAdmin.Controllers
             return View();
         }
 
+        [HttpPost]
+        public void TestStatusUrl()
+        {
+
+        }
+
         public IActionResult Init()
         {
             // TODO: reset all answers. Debug command

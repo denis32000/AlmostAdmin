@@ -88,13 +88,14 @@ namespace AlmostAdmin.Controllers
                 return BadRequest();
 
             var questionTags = new List<QuestionTag>();
-            
+
             var question = new Question
             {
                 Text = questionText,
                 Date = DateTime.Now,
                 Project = project,
-                QuestionTags = questionTags
+                QuestionTags = questionTags,
+                StatusUrl = Url.Action("TestStatusUrl", "Home") // TODO: test purpose
             };
 
             _applicationContext.Questions.Add(question);

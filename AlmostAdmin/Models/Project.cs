@@ -18,6 +18,7 @@ namespace AlmostAdmin.Models
         //public string Login { get; set; }
         //public string Password { get; set; }
         public string Name { get; set; }
+        public string PrivateKey { get; set; }
 
         public virtual ICollection<UserProject> UserProjects { get; set; }
         public virtual ICollection<Question> Questions { get; set; }
