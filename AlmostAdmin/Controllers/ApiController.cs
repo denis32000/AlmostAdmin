@@ -14,8 +14,16 @@ using Newtonsoft.Json;
 
 namespace AlmostAdmin.Controllers
 {
+    /*
+    public class QuestionPostModel
+    {
+        public string data { get; set; }
+        public string signature { get; set; }
+    }
+    */
+
     [Route("api/[controller]")]
-    public class ApiController : Controller
+    public class QuestionController : Controller
     {
         // TODO: возможность присылать ответ на вопрос указывая ИД вопроса
         // TODO: возможность запросить ответ на вопрос по айдишнику вопроса
@@ -25,36 +33,32 @@ namespace AlmostAdmin.Controllers
         private ApplicationContext _applicationContext;
         private ProcessorService _processorService;
 
-        public ApiController(MainService mainService, ApplicationContext applicationContext, ProcessorService processorService)
+        public QuestionController(MainService mainService, ApplicationContext applicationContext, ProcessorService processorService)
         {
             _mainService = mainService;
             _applicationContext = applicationContext;
             _processorService = processorService;
         }
 
-        public async Task<string> PostQuestion(string data, string signature)
+        [HttpPost]
+        public async Task<JsonResult> Post([FromForm] string data, [FromForm]string signature)
         {
             try
             {
-                string answerJson;
-                var answer = new AnswerOnRequest();
+                //string answerJson;
                 var decodedData = CryptoUtils.Base64Decode(data);
                 var questionToApi = JsonConvert.DeserializeObject<QuestionToApi>(decodedData);
-                
+
                 if (questionToApi.IsModelValid())
                 {
-                    answer.StatusCode = Models.Api.StatusCode.WrongData;
-                    answer.StatusMessage = "Some of the data parameters are invalid. Check the documentation.";
-                    answerJson = JsonConvert.SerializeObject(answer);
-                    return answerJson;
+                    throw new ErrorWithDataException("Some of the data parameters are invalid. Check the documentation.",
+                        Models.Api.StatusCode.WrongData);
                 }
-                
-                if(!Utils.ValidUrl(questionToApi.StatusUrl))
+
+                if (!Utils.ValidUrl(questionToApi.StatusUrl))
                 {
-                    answer.StatusCode = Models.Api.StatusCode.WrongStatusUrl;
-                    answer.StatusMessage = "Provided URL is not valid.";
-                    answerJson = JsonConvert.SerializeObject(answer);
-                    return answerJson;
+                    throw new ErrorWithDataException("Provided URL is not valid.",
+                        Models.Api.StatusCode.WrongStatusUrl);
                 }
 
                 var user = _applicationContext.User
@@ -62,30 +66,24 @@ namespace AlmostAdmin.Controllers
                         .ThenInclude(up => up.Project)
                     .FirstOrDefault(u => u.UserName == questionToApi.Login);
 
-                if(user == null || user.PasswordHash != questionToApi.PasswordHash)
+                if (user == null)// || user.PasswordHash != questionToApi.PasswordHash)
                 {
-                    answer.StatusCode = Models.Api.StatusCode.WrongLoginPasswordCredentials;
-                    answer.StatusMessage = "User with such email-password combination doesn't exist.";
-                    answerJson = JsonConvert.SerializeObject(answer);
-                    return answerJson;
+                    throw new ErrorWithDataException("User with such email doesn't exist.",
+                        Models.Api.StatusCode.WrongLoginPasswordCredentials);
                 }
-                
+
                 var userProject = user.UserProjects.FirstOrDefault(up => up.Project.Id == questionToApi.ProjectId);
 
-                if(userProject == null)
+                if (userProject == null)
                 {
-                    answer.StatusCode = Models.Api.StatusCode.WrongProjectId;
-                    answer.StatusMessage = "Provided user doesn't consist in the project with such ID.";
-                    answerJson = JsonConvert.SerializeObject(answer);
-                    return answerJson;
+                    throw new ErrorWithDataException("Provided user doesn't consist in the project with such ID.",
+                        Models.Api.StatusCode.WrongProjectId);
                 }
 
                 if (!Utils.ValidateSignature(data, signature, userProject.Project.PrivateKey))
                 {
-                    answer.StatusCode = Models.Api.StatusCode.WrongSignature;
-                    answer.StatusMessage = "Signature is not valid. Check your PrivateKey and MD5 alghorithm.";
-                    answerJson = JsonConvert.SerializeObject(answer);
-                    return answerJson;
+                    throw new ErrorWithDataException("Signature is not valid. Check your PrivateKey and MD5 alghorithm.",
+                        Models.Api.StatusCode.WrongSignature);
                 }
 
                 var question = new Question
@@ -102,24 +100,42 @@ namespace AlmostAdmin.Controllers
                 // Запускаем обработку вопроса без ожидания результата
                 _processorService.ProcessQuestionAsync(question.Id);
 
-                answer.QuestionId = question.Id;
-                answer.StatusCode = Models.Api.StatusCode.Success;
-                answer.StatusMessage = "Your question was successfully added. Wait for an answer to Status URL.";
-                answerJson = JsonConvert.SerializeObject(answer);
-                return answerJson;
+                var answer = new AnswerOnRequest
+                {
+                    QuestionId = question.Id,
+                    StatusCode = Models.Api.StatusCode.Success,
+                    StatusMessage = "Your question was successfully added. Wait for an answer to Status URL."
+                };
+                //answerJson = JsonConvert.SerializeObject(answer);
+                return Json(answer);
             }
-            catch(Exception ex)
+            catch (ErrorWithDataException ex)
+            {
+                var answer = new AnswerOnRequest()
+                {
+                    StatusCode = ex.StatusCode(),
+                    StatusMessage = ex.Message
+                };
+                //var answerJson = JsonConvert.SerializeObject(answer);
+                return Json(answer);
+            }
+            catch (Exception ex)
             {
                 var answer = new AnswerOnRequest()
                 {
                     StatusCode = Models.Api.StatusCode.Error,
                     StatusMessage = ex.Message
                 };
-                var answerJson = JsonConvert.SerializeObject(answer);
-                return answerJson;
+                //var answerJson = JsonConvert.SerializeObject(answer);
+                return Json(answer);
             }
         }
-
+        /*
+        [HttpPost]
+        public async Task<string> Post([FromBody] QuestionPostModel questionPostModel)
+        {
+        }
+        */
 
         // GET api/<controller>/5
         [HttpGet("{id}")]
@@ -127,13 +143,13 @@ namespace AlmostAdmin.Controllers
         {
             return "value";
         }
-
-        // POST api/<controller>
-        [HttpPost]
-        public void Post([FromBody]string value)
-        {
-        }
-
+        //
+        //// POST api/<controller>
+        //[HttpPost]
+        //public void Post([FromBody]string value)
+        //{
+        //}
+        //
         // PUT api/<controller>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)

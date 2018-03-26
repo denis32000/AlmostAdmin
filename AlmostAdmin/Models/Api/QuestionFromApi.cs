@@ -9,7 +9,6 @@ namespace AlmostAdmin.Models.Api
     {
         bool IsModelValid();
         string Login { get; set; }
-        string PasswordHash { get; set; }
     }
 
     public class QuestionToApi : IApiRequestModel
@@ -17,7 +16,6 @@ namespace AlmostAdmin.Models.Api
         //public int Id { get; set; }
         public int ProjectId { get; set; }
         public string Login { get; set; }
-        public string PasswordHash { get; set; }
         public string Text { get; set; }
         public string StatusUrl { get; set; }
 
@@ -79,7 +77,6 @@ namespace AlmostAdmin.Models.Api
     public class AnswerOnRequest
     {
         public int QuestionId { get; set; }
-        //public OperationType OperationType { get; set; } // QuestionToApi / AnswerToApi
         public StatusCode StatusCode { get; set; }
         public string StatusMessage { get; set; }
     }
