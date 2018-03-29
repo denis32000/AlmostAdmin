@@ -12,7 +12,7 @@ using System;
 namespace AlmostAdmin.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20180319195811_Initial")]
+    [Migration("20180329160912_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,11 +45,11 @@ namespace AlmostAdmin.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Login");
+                    b.Property<bool>("AnswerWithoutApprove");
 
                     b.Property<string>("Name");
 
-                    b.Property<string>("Password");
+                    b.Property<string>("PrivateKey");
 
                     b.HasKey("Id");
 
@@ -63,6 +63,8 @@ namespace AlmostAdmin.Migrations
 
                     b.Property<int?>("AnswerId");
 
+                    b.Property<bool>("AnswerToEmail");
+
                     b.Property<bool>("AnsweredByHuman");
 
                     b.Property<DateTime>("Date");
@@ -70,6 +72,8 @@ namespace AlmostAdmin.Migrations
                     b.Property<string>("InteligenceValue");
 
                     b.Property<int>("ProjectId");
+
+                    b.Property<string>("StatusUrl");
 
                     b.Property<string>("Text");
 

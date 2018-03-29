@@ -49,7 +49,7 @@ namespace AlmostAdmin.Controllers
                 var decodedData = CryptoUtils.Base64Decode(data);
                 var questionToApi = JsonConvert.DeserializeObject<QuestionToApi>(decodedData);
 
-                if (questionToApi.IsModelValid())
+                if (!questionToApi.IsModelValid())
                 {
                     throw new ErrorWithDataException("Some of the data parameters are invalid. Check the documentation.",
                         Models.Api.StatusCode.WrongData);

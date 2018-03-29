@@ -55,9 +55,9 @@ namespace AlmostAdmin.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Login = table.Column<string>(nullable: true),
+                    AnswerWithoutApprove = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(nullable: true),
-                    Password = table.Column<string>(nullable: true)
+                    PrivateKey = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -235,10 +235,12 @@ namespace AlmostAdmin.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AnswerId = table.Column<int>(nullable: true),
+                    AnswerToEmail = table.Column<bool>(nullable: false),
                     AnsweredByHuman = table.Column<bool>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
                     InteligenceValue = table.Column<string>(nullable: true),
                     ProjectId = table.Column<int>(nullable: false),
+                    StatusUrl = table.Column<string>(nullable: true),
                     Text = table.Column<string>(nullable: true)
                 },
                 constraints: table =>

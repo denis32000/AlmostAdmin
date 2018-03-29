@@ -108,7 +108,7 @@ namespace AlmostAdmin.Controllers
         }
 
         [HttpGet]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOff()
         {
             if (User.Identity.IsAuthenticated)

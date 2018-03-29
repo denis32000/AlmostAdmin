@@ -44,11 +44,11 @@ namespace AlmostAdmin.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Login");
+                    b.Property<bool>("AnswerWithoutApprove");
 
                     b.Property<string>("Name");
 
-                    b.Property<string>("Password");
+                    b.Property<string>("PrivateKey");
 
                     b.HasKey("Id");
 
@@ -62,6 +62,8 @@ namespace AlmostAdmin.Migrations
 
                     b.Property<int?>("AnswerId");
 
+                    b.Property<bool>("AnswerToEmail");
+
                     b.Property<bool>("AnsweredByHuman");
 
                     b.Property<DateTime>("Date");
@@ -69,6 +71,8 @@ namespace AlmostAdmin.Migrations
                     b.Property<string>("InteligenceValue");
 
                     b.Property<int>("ProjectId");
+
+                    b.Property<string>("StatusUrl");
 
                     b.Property<string>("Text");
 

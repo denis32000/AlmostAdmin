@@ -22,11 +22,13 @@ namespace AlmostAdmin.Controllers
         private MainService _mainService;
         private ApplicationContext _applicationContext;
         private Project _project;
+        private ProcessorService _processorService;
 
-        public PanelController(MainService mainService, ApplicationContext applicationContext)
+        public PanelController(MainService mainService, ApplicationContext applicationContext, ProcessorService processorService)
         {
             _mainService = mainService;
             _applicationContext = applicationContext;
+            _processorService = processorService;
         }
 
         public IActionResult Index(int projectId)
@@ -70,6 +72,8 @@ namespace AlmostAdmin.Controllers
 
             _applicationContext.Answers.Add(answer);
             await _applicationContext.SaveChangesAsync();
+
+            _processorService.UpdateStatusForQuestion(questionId);
 
             return Ok();
         }
@@ -133,6 +137,35 @@ namespace AlmostAdmin.Controllers
             return Json(new Result { Success = true });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ActivateFastAnswers(int projectId)
+        {
+            var project = _applicationContext.Projects
+                .FirstOrDefault(p => p.Id == projectId);
+
+            if (project == null)
+                return Json(new Result { Message = "Parameter projectId" });
+
+            project.AnswerWithoutApprove = true;
+            await _applicationContext.SaveChangesAsync();
+
+            return Json(new Result { Success = true });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeactivateFastAnswers(int projectId)
+        {
+            var project = _applicationContext.Projects
+                .FirstOrDefault(p => p.Id == projectId);
+
+            if(project == null)
+                return Json(new Result { Message = "Parameter projectId" });
+
+            project.AnswerWithoutApprove = false;
+            await _applicationContext.SaveChangesAsync();
+
+            return Json(new Result { Success = true });
+        }
         //public IActionResult ProjectUsers()
         //{
         //    return PartialView("", _project);

@@ -5,6 +5,27 @@ using System.Threading.Tasks;
 
 namespace AlmostAdmin.Models.Api
 {
+    public enum OperationType
+    {
+        QuestionToApi,
+        AnswerToApi
+    }
+
+    public enum StatusCode
+    {
+        Success,
+        Error,
+
+        WrongLoginPasswordCredentials,
+        WrongSignature,
+        WrongData,
+        WrongProjectId,
+        WrongStatusUrl,
+
+        AnswerByHuman,
+        AnswerBySystem
+    }
+
     public interface IApiRequestModel
     {
         bool IsModelValid();
@@ -56,23 +77,6 @@ namespace AlmostAdmin.Models.Api
     }
     */
 
-    public enum OperationType
-    {
-        QuestionToApi,
-        AnswerToApi
-    }
-
-    public enum StatusCode
-    {
-        Success,
-        Error,
-
-        WrongLoginPasswordCredentials,
-        WrongSignature,
-        WrongData,
-        WrongProjectId,
-        WrongStatusUrl
-    }
 
     public class AnswerOnRequest
     {
@@ -87,5 +91,10 @@ namespace AlmostAdmin.Models.Api
         //public OperationType OperationType { get; set; } // QuestionToApi / AnswerToApi
         public StatusCode StatusCode { get; set; }
         public string StatusMessage { get; set; }
+
+        public string QuestionText { get; set; }
+        public string AnswerText { get; set; }
+
+        //public bool AnswerToEmail { get; set; }
     }
 }

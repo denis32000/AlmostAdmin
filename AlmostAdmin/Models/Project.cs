@@ -20,6 +20,8 @@ namespace AlmostAdmin.Models
         public string Name { get; set; }
         public string PrivateKey { get; set; }
 
+        public bool AnswerWithoutApprove { get; set; }
+
         public virtual ICollection<UserProject> UserProjects { get; set; }
         public virtual ICollection<Question> Questions { get; set; }
         //public virtual ICollection<Answer> Answers { get; set; }

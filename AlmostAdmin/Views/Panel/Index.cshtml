@@ -10,9 +10,29 @@
     <li><a asp-action="Answers">Список ответов за всё время</a></li>
 </ol>
 
+<div style="border:dashed">
+    <b>Вы можете установить приоритет отправки ответов</b>
+    В случае, если Вы хотите получать ответы в режиме онлайн без подтверждения администрацией
+    Вы можете активировать опцию "Быстрые ответы", и система сама будет подбирать возможный ответ
+    <span style="color:forestgreen">* Ответ на вопрос будет в ожидании подтверждения человеком и если он изменится, ответ будет отправлен на Ваш ресурс повторно!</span>
+    @if (!Model.AnswerWithoutApprove)
+    {
+        <button class="btn btn-success" onclick="activateFastAnswers()">Активировать "Быстрые ответы"</button>
+    }
+    else
+    {
+        <button class="btn btn-danger" onclick="deactivateFastAnswers()">Деактивировать "Быстрые ответы"</button>
+    }
+</div>
+<p>
+    <h4>Данные для создания запросов на AlmostAdmin API</h4>
+    Приватный ключ от проекта: <input class="input-sm" style="width:300px" type="text" disabled="disabled" value="@Model.PrivateKey" />
+    <br />Идентификатор проекта: <input class="input-sm" style="width:100px" type="text" disabled="disabled" value="@Model.Id" />
+</p>
+
 <div class="center-block btn-group-vertical">
-    
-        <div>Сортировка вопросов</div>
+
+    <div>Сортировка вопросов</div>
     <div class="dropdown">
         <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
             Dropdown Example
@@ -27,62 +47,66 @@
 </div>
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-5">
         <table class="table table-bordered">
             @foreach (var question in Model.Questions)
-        {
-            <tr>
-                <td>
-                    @question.Text [
-                    @foreach (var tag in question.QuestionTags)
-                {
-                    <span>@tag.Tag.Text,</span>
-            }]
-                </td>
-                <td>
-                    @if (question.AnsweredByHuman)
-                {
-                    <span>
-                        (Человек): @question.Answer.Text
-                        <button onclick="answerOnQuestion(@question.Id)">
-                            Изменить ответ
-                        </button>
-                        // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
-                    </span>
-            }
-            else if (question.Answer != null)
             {
-                <span>
-                    (Система): @question.Answer.Text
-                    <button onclick="answerOnQuestion(@question.Id)">
-                        Изменить ответ
-                    </button>
-                    // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
-                </span>
-        }
-        else
-        {
-            <span>
-                Этот вопрос еще без ответа!
-                <button onclick="answerOnQuestion(@question.Id)">
-                    Ответить
-                </button>
-                // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
-            </span>
-    }
-                </td>
-            </tr>
-    }
+                <tr>
+                    <td>
+                        @question.Text [
+                        @foreach (var tag in question.QuestionTags)
+                        {
+                            <span>@tag.Tag.Text,</span>
+                        }]
+                    </td>
+                    <td>
+                        @if (question.AnsweredByHuman)
+                        {
+                            <span>
+                                (Человек): @question.Answer.Text
+                                <button onclick="answerOnQuestion(@question.Id)">
+                                    Изменить ответ
+                                </button>
+                                // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
+                            </span>
+                        }
+                        else if (question.Answer != null)
+                        {
+                            <span>
+                                (Система): @question.Answer.Text
+                                <button onclick="answerOnQuestion(@question.Id)">
+                                    Изменить ответ
+                                </button>
+                                // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
+                            </span>
+                        }
+                        else
+                        {
+                            <span>
+                                Этот вопрос еще без ответа!
+                                <button onclick="answerOnQuestion(@question.Id)">
+                                    Ответить
+                                </button>
+                                // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
+                            </span>
+                        }
+                    </td>
+                </tr>
+            }
         </table>
     </div>
 
-    <div class="col-md-4">
-        Участники проекта 
+    <div class="col-md-3">
+        Участники проекта
         @if (owner.Email.Equals(User.Identity.Name))
         {
             <button class="btn btn-default" onclick="inviteNewUsers(@Model.Id)">Пригласить</button>
+            <button class="btn btn-default" onclick="usersStats(@Model.Id)">Статистика</button>
         }
         @Html.Partial("_ProjectUsers", Model.UserProjects.Select(up => up.User))
+    </div>
+    <div class="col-md-4">
+        <div id="container" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
     </div>
 </div>
 
@@ -105,7 +129,80 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-<script>
+    <!--
+    <script type="text/javascript" src="~/lib/highchartsjs/js/highcharts.js"></script>
+    <script type="text/javascript" src="~/lib/highchartsjs/js/modules/exporting.js"></script>
+        -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script>
+        Highcharts.chart('container', {
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: 'Stacked bar chart'
+            },
+            xAxis: {
+                categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Total fruit consumption'
+                }
+            },
+            legend: {
+                reversed: true
+            },
+            plotOptions: {
+                series: {
+                    stacking: 'normal'
+                }
+            },
+            series: [{
+                name: 'John',
+                data: [5, 3, 4, 7, 2]
+            }, {
+                name: 'Jane',
+                data: [2, 2, 3, 2, 1]
+            }, {
+                name: 'Joe',
+                data: [3, 4, 4, 2, 5]
+            }]
+        });
+
+    function activateFastAnswers() {
+        $.post('@Url.Action("ActivateFastAnswers")',
+                {
+                    projectId: @Model.Id
+                },
+                function (response) {
+                    if (!response.success) {
+                        alert(response.message);
+                        return;
+                    }
+
+                    alert("Функция активирована!");
+                    window.location = window.location;
+                });
+    }
+    function deactivateFastAnswers() {
+        $.post('@Url.Action("DeactivateFastAnswers")',
+                {
+                    projectId: @Model.Id
+                },
+                function (response) {
+                    if (!response.success) {
+                        alert(response.message);
+                        return;
+                    }
+
+                    alert("Функция активирована!");
+                    window.location = window.location;
+                });
+    }
+
     function inviteNewUsers(projectId) {
         showPrompt("Введите почту:", function (emailToInvite) {
             $.post('@Url.Action("InviteUser")',
@@ -149,7 +246,7 @@
                 });
         });
     }
-</script>
+    </script>
 }
 <!--
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
