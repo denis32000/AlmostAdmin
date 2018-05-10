@@ -29,9 +29,9 @@ namespace AlmostAdmin.Controllers
         }
 
         [HttpPost]
-        public void TestStatusUrl()
+        public IActionResult TestStatusUrl([FromForm]string data, [FromForm]string signature)
         {
-
+            return Json("*OK*");
         }
 
         public IActionResult Init()
@@ -48,7 +48,7 @@ namespace AlmostAdmin.Controllers
             return View();
         }
 
-        public IActionResult About()
+        public IActionResult ApiDocs()
         {
             ViewData["Message"] = "Your application description page.";
 

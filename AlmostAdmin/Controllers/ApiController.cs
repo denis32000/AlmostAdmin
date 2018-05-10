@@ -98,7 +98,7 @@ namespace AlmostAdmin.Controllers
                 await _applicationContext.SaveChangesAsync();
 
                 // Запускаем обработку вопроса без ожидания результата
-                _processorService.ProcessQuestionAsync(question.Id);
+                _processorService.FindAnswersForQuestionAsync(question.Id);
 
                 var answer = new AnswerOnRequest
                 {

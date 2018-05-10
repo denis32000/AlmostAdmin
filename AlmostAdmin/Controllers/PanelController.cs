@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using AlmostAdmin.Models;
 using AlmostAdmin.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,12 +25,14 @@ namespace AlmostAdmin.Controllers
         private ApplicationContext _applicationContext;
         private Project _project;
         private ProcessorService _processorService;
+        private IHostingEnvironment _he;
 
-        public PanelController(MainService mainService, ApplicationContext applicationContext, ProcessorService processorService)
+        public PanelController(MainService mainService, ApplicationContext applicationContext, ProcessorService processorService, IHostingEnvironment he)
         {
             _mainService = mainService;
             _applicationContext = applicationContext;
             _processorService = processorService;
+            _he = he;
         }
 
         public IActionResult Index(int projectId)
@@ -55,11 +59,17 @@ namespace AlmostAdmin.Controllers
             if (project == null)
                 return BadRequest();
 
+            var user = _mainService.GetUserByClaims(User);
+
+            if (user == null)
+                return BadRequest();
+
             var answer = new Answer
             {
                 Date = DateTime.Now,
                 Text = answerText,
-                Project = project
+                Project = project,
+                User = user
             };
 
             var question = project.Questions.FirstOrDefault(q => q.Id == questionId);
@@ -73,8 +83,9 @@ namespace AlmostAdmin.Controllers
             _applicationContext.Answers.Add(answer);
             await _applicationContext.SaveChangesAsync();
 
-            _processorService.UpdateStatusForQuestion(questionId);
-
+            _processorService.AnswerOnSimilarQuestionsAsync(questionId);
+            //_processorService.TrySendQuestionAnswerAsync(questionId);
+            
             return Ok();
         }
 
@@ -99,11 +110,14 @@ namespace AlmostAdmin.Controllers
                 Date = DateTime.Now,
                 Project = project,
                 QuestionTags = questionTags,
-                StatusUrl = Url.Action("TestStatusUrl", "Home") // TODO: test purpose
+                StatusUrl = Url.Action("TestStatusUrl", "Home", null, Request.Scheme) // TODO: test purpose
             };
 
             _applicationContext.Questions.Add(question);
             await _applicationContext.SaveChangesAsync();
+
+            // Запускаем обработку вопроса без ожидания результата
+            _processorService.FindAnswersForQuestionAsync(question.Id, _he.ContentRootPath);
 
             return Ok();
         }

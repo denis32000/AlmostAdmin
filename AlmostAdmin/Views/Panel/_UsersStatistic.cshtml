@@ -1,0 +1,49 @@
+﻿@model IEnumerable<AlmostAdmin.Models.User>
+
+    <div id="container" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
+    
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script>
+        var usersList = @Model.Select(u => u.UserName).ToList();
+        console.log(usersList);
+        var userAnswers = @Model.Select(u => u.Answers.Count());
+        console.log(userAnswers);
+
+        Highcharts.chart('container', {
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: 'Активность участников проекта'
+            },
+            xAxis: {
+                categories: usersList
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Количество отвеченных вопросов'
+                }
+            },
+            legend: {
+                reversed: true
+            },
+            plotOptions: {
+                series: {
+                    stacking: 'normal'
+                }
+            },
+            series: [{
+                name: 'Ответы',
+                data: userAnswers
+            }]
+            //}, {
+            //    name: 'Jane',
+            //    data: [2, 2, 3, 2, 1]
+            //}, {
+            //    name: 'Joe',
+            //    data: [3, 4, 4, 2, 5]
+            //}]
+        });
+    </script>

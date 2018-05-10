@@ -2,11 +2,13 @@
 using AlmostAdmin.Data;
 using AlmostAdmin.Models;
 using AlmostAdmin.Models.Api;
+using Lucene.Net.Index;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,37 +19,98 @@ namespace AlmostAdmin.Services
         // TODO: используя ResponseSenderService мы отправляем ответы на вопросы на StatusUrl 
         // по мере поступления ответов от администраторов проекта
 
-        private IntelligenceRequestAdapter _intelligenceRequestAdapter;
+        private const float MinimalLuceneSimiliarity = 0.5f;// TODO: установить нижнюю границу похожести вопросов
+
+        private LuceneProcessor _intelligenceRequestAdapter;
         private ApplicationContext _applicationContext;
 
-        public ProcessorService(IntelligenceRequestAdapter intelligenceRequestAdapter, ApplicationContext applicationContext, ResponseSenderService responseSenderService)
+        public ProcessorService(LuceneProcessor intelligenceRequestAdapter, 
+            ApplicationContext applicationContext, 
+            ResponseSenderService responseSenderService)
         {
             _intelligenceRequestAdapter = intelligenceRequestAdapter;
             _applicationContext = applicationContext;
         }
 
-        internal async Task<bool> ProcessQuestionAsync(int questionId)
+        /// <summary>
+        /// Нам пришел вопрос и мы хотим его обработать
+        /// запускаем алгоритм поиска похожих
+        /// 2.1. если нашел похожий с ответом - присваиваем вопросу готовый ответ, НО не ставим статус "Отвечен человеком"
+        /// 2.2 если не нашел - ждем ответа от модератора
+        /// 
+        /// Еще раз: я ищу похожие вопросы, отбираю на которые есть ответ от ЧЕЛОВЕКА, 
+        /// и присваиваю ответ на вопрос от лица системы
+        /// </summary>
+        /// <param name="questionId"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        internal async Task<bool> FindAnswersForQuestionAsync(int questionId, string path = "")
         {
-            // в АПИ прислали новый вопрос который нужно обработать по возможности
-            //var question = _applicationContext.Questions.First(q => q.Id == questionId);
-            //
-            //var someIntelligenceValue = await _intelligenceRequestAdapter.ProcessDataAsync(question.Text);
-            //
-            //if(someIntelligenceValue.Success)
-            //{
-            //    question.InteligenceValue = someIntelligenceValue.Result;
-            //
-            //    // если хотя бы у одного из них есть ответ, то сразу возвращаем ответ клиенту
-            //    var similarQuestionWithAnswer = _applicationContext.Questions
-            //        .Include(q => q.Answer)
-            //        .FirstOrDefault(q => q.InteligenceValue == question.InteligenceValue && q.Answer != null);
-            //
-            //    // TODO: впринципе это готовый ответ (similarQuestionWithAnswer)
-            //    // TODO: сервис, который будет отправлять ПОСТ ответы на statusUrl
-            //}
+            var question = _applicationContext.Questions.First(q => q.Id == questionId);
 
-            //throw new NotImplementedException();
+            if (_intelligenceRequestAdapter.GetDocumentsCount() == 0)
+                _intelligenceRequestAdapter.BuildIndexWithExistingData(_applicationContext.Questions.ToList(), true);
+           
+            var luceneSearchResults = await Task.Run(
+                () => _intelligenceRequestAdapter.Search(question.Text, question.ProjectId, 10));
+
+            if(luceneSearchResults.Count > 0)
+            {
+                var ids = luceneSearchResults
+                    .Where(r => r.Score > MinimalLuceneSimiliarity)
+                    .Select(p => p.QuestionDbId);
+
+                var similarQuestions = _applicationContext.Questions
+                    .Include(q => q.Answer)
+                    .Where(q => ids.Contains(q.Id) && q.AnsweredByHuman)
+                    .ToList();
+                
+                if (similarQuestions.Count > 0)
+                {
+                    question.Answer = similarQuestions.First().Answer;
+                    await _applicationContext.SaveChangesAsync();
+
+                    TrySendQuestionAnswerAsync(questionId);
+                }
+            }
+
+            _intelligenceRequestAdapter.AddDataToIndex(question);
             return false;
+        }
+
+        /// <summary>
+        /// Когда ЧЕЛОВЕК дал ответ на какой то вопрос, я нашел все похожие, 
+        /// и у которых совпадение больше минимума, я даю на них ответ от лица системы
+        /// </summary>
+        /// <param name="questionId"></param>
+        /// <returns></returns>
+        internal async Task AnswerOnSimilarQuestionsAsync(int questionId)
+        {
+            var question = _applicationContext.Questions
+                .Include(q => q.Answer)
+                .First(q => q.Id == questionId);
+
+            var luceneSearchResults = await Task.Run(
+                () => _intelligenceRequestAdapter.Search(question.Text, question.ProjectId, 10));
+
+            if (luceneSearchResults.Count > 0)
+            {
+                var ids = luceneSearchResults
+                    .Where(r => r.Score > MinimalLuceneSimiliarity)
+                    .Select(p => p.QuestionDbId);
+
+                var similarQuestions = _applicationContext.Questions
+                    .Include(q => q.Answer)
+                    .Where(q => ids.Contains(q.Id) && q.Answer == null) // проверяем, что бы они были неотвеченными
+                    .ToList();
+
+                foreach(var similarQuestion in similarQuestions)
+                {
+                    similarQuestion.Answer = question.Answer;
+                    await _applicationContext.SaveChangesAsync(); // TODO: rework it! bad perfomance
+                    TrySendQuestionAnswerAsync(similarQuestion.Id);
+                }
+            }
         }
 
         internal async Task UpdateStatusForAllQuestions()
@@ -56,24 +119,40 @@ namespace AlmostAdmin.Services
             throw new NotImplementedException();
         }
 
-        internal async Task UpdateStatusForQuestion(int questionId)
+        /// <summary>
+        /// Цель: отправить ОТВЕТ на статусУрл
+        /// 
+        /// Варианты, когда вызывается этот метод:
+        /// 1. Мы получили ответ в КОНТРОЛ_ПАНЕЛ (от модератора)
+        /// 2. Ответ на вопрос с этим идом из АПИ
+        /// 3. Система сама нашла подходящий ответ на вопрос и попыталась отправить ответ, если проект это допускает
+        /// </summary>
+        /// <param name="questionId"></param>
+        /// <returns></returns>
+        internal async Task<bool> TrySendQuestionAnswerAsync(int questionId)
         {
-            // значит мы получили ответ в КОНТРОЛ_ПАНЕЛ на вопрос с этим идом, и можем отправить ОТВЕТ на статусУрл
             var question = _applicationContext.Questions
                 .Include(q => q.Answer)
                 .Include(q => q.Project)
                 .FirstOrDefault(q => q.Id == questionId);
 
+            if (question.Answer == null)
+                return false;
+
+            // Если проект запрещает отправлять ответ без подтверждения модератора И ответ дан не модератором
+            if (!question.Project.AnswerWithoutApprove && !question.AnsweredByHuman)
+                return false;
+
             if(question.AnswerToEmail)
             {
                 var emailClient = new EmailService();
-                emailClient.SendEmailAsync(
+                await emailClient.SendEmailAsync(
                     question.StatusUrl, 
-                    $"Ответ на Ваш вопрос на {question.Project.Name}", 
+                    $"Ответ на вопрос. Проект {question.Project.Name}", 
                     question.Answer.Text, 
                     question.Project.Name);
                 
-                return;
+                return true;
             }
 
             var answerOnStatus = new AnswerOnStatusUrl
@@ -92,9 +171,11 @@ namespace AlmostAdmin.Services
             request.AddParameter("data", data);
             request.AddParameter("signature", signature);
 
-            var response = new RestClient(question.StatusUrl).Execute(request);
+            var restClient = new RestClient(question.StatusUrl);
+            var response = await Task.Run(() => restClient.Execute(request));
 
-            var result = response.Content;
+            //var result = response.Content;
+            return response.IsSuccessful;
         }
 
         private string CreateSignature(string jsonData, string privateKey)

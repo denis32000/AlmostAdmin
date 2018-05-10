@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.0",
-    "signature": "556ada4cadf8f5aeddfd8d5763823a7869815951"
+    "signature": "15bbe45cf1f3a64321a5e5b0730eace03480ebe8"
   },
   "compilationOptions": {
     "defines": [
@@ -23,6 +23,10 @@
     ".NETCoreApp,Version=v2.0": {
       "AlmostAdmin/1.0.0": {
         "dependencies": {
+          "Lucene.Net": "4.8.0-beta00005",
+          "Lucene.Net.Analysis.Common": "4.8.0-beta00005",
+          "Lucene.Net.Queries": "4.8.0-beta00005",
+          "Lucene.Net.QueryParser": "4.8.0-beta00005",
           "MailKit": "2.0.2",
           "Microsoft.AspNetCore.All": "2.0.5",
           "Microsoft.NETCore.App": "2.0.0",
@@ -73,6 +77,65 @@
             "rid": "win-x86",
             "assetType": "native"
           }
+        }
+      },
+      "Lucene.Net/4.8.0-beta00005": {
+        "dependencies": {
+          "Microsoft.CSharp": "4.4.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Lucene.Net.dll": {}
+        },
+        "compile": {
+          "lib/netstandard2.0/Lucene.Net.dll": {}
+        }
+      },
+      "Lucene.Net.Analysis.Common/4.8.0-beta00005": {
+        "dependencies": {
+          "Lucene.Net": "4.8.0-beta00005"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Lucene.Net.Analysis.Common.dll": {}
+        },
+        "compile": {
+          "lib/netstandard2.0/Lucene.Net.Analysis.Common.dll": {}
+        }
+      },
+      "Lucene.Net.Queries/4.8.0-beta00005": {
+        "dependencies": {
+          "Lucene.Net": "4.8.0-beta00005",
+          "NETStandard.Library": "2.0.0"
+        },
+        "runtime": {
+          "lib/netstandard1.6/Lucene.Net.Queries.dll": {}
+        },
+        "compile": {
+          "lib/netstandard1.6/Lucene.Net.Queries.dll": {}
+        }
+      },
+      "Lucene.Net.QueryParser/4.8.0-beta00005": {
+        "dependencies": {
+          "Lucene.Net.Analysis.Common": "4.8.0-beta00005",
+          "Lucene.Net.Queries": "4.8.0-beta00005",
+          "Lucene.Net.Sandbox": "4.8.0-beta00005"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Lucene.Net.QueryParser.dll": {}
+        },
+        "compile": {
+          "lib/netstandard2.0/Lucene.Net.QueryParser.dll": {}
+        }
+      },
+      "Lucene.Net.Sandbox/4.8.0-beta00005": {
+        "dependencies": {
+          "Lucene.Net": "4.8.0-beta00005",
+          "NETStandard.Library": "2.0.0"
+        },
+        "runtime": {
+          "lib/netstandard1.6/Lucene.Net.Sandbox.dll": {}
+        },
+        "compile": {
+          "lib/netstandard1.6/Lucene.Net.Sandbox.dll": {}
         }
       },
       "MailKit/2.0.2": {
@@ -4380,6 +4443,41 @@
       "sha512": "sha512-GsCf4q+eyaI49rCPlgYxdxa1SQCysXFFdSJWdstrwxytg4+VPYLYrXD4AT2rjHVJ+UF7SSWX9CapWEYaU4ejVQ==",
       "path": "libuv/1.10.0",
       "hashPath": "libuv.1.10.0.nupkg.sha512"
+    },
+    "Lucene.Net/4.8.0-beta00005": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-UprkNBEOLxszKl1YN70zDVRU8wJkV4SBvcWqs822Oqpxj5arvxMRqkvqVhBPajPz3YxObsLxJNdYE62xviQjKQ==",
+      "path": "lucene.net/4.8.0-beta00005",
+      "hashPath": "lucene.net.4.8.0-beta00005.nupkg.sha512"
+    },
+    "Lucene.Net.Analysis.Common/4.8.0-beta00005": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-40+ARCsfFky5ykNqri26H3ehjPqRGpyIn4do2MIiL8QbgGrijpgl5GzwiPrZUUIlxlI1e7UhFCLXovl+Hv9qNg==",
+      "path": "lucene.net.analysis.common/4.8.0-beta00005",
+      "hashPath": "lucene.net.analysis.common.4.8.0-beta00005.nupkg.sha512"
+    },
+    "Lucene.Net.Queries/4.8.0-beta00005": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-rDTIHnDgvQ21PBHOjVmIjzNhZS09Vklu1H93GIkQiqpO+II1biIMc6+cP7/lVK0VNS4i9fyMVeWeKSPC+ox09g==",
+      "path": "lucene.net.queries/4.8.0-beta00005",
+      "hashPath": "lucene.net.queries.4.8.0-beta00005.nupkg.sha512"
+    },
+    "Lucene.Net.QueryParser/4.8.0-beta00005": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-qSVVDh7Uoa/yPOzo0QUXyHxFfaLwbr3p1fD6lUgBH+ucKK6qmMCEM2SHXCBssfrS7OTlgHFK3GrHaq1Det8CxQ==",
+      "path": "lucene.net.queryparser/4.8.0-beta00005",
+      "hashPath": "lucene.net.queryparser.4.8.0-beta00005.nupkg.sha512"
+    },
+    "Lucene.Net.Sandbox/4.8.0-beta00005": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-b6S7vc6IGLDNUBeYwEY03AgngoRra8c/DH76S6EWtCw38Oq4jCUtHLrc25sLHV1T/U75lSfn62/BttGTOvPzGQ==",
+      "path": "lucene.net.sandbox/4.8.0-beta00005",
+      "hashPath": "lucene.net.sandbox.4.8.0-beta00005.nupkg.sha512"
     },
     "MailKit/2.0.2": {
       "type": "package",

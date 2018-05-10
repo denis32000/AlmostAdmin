@@ -20,6 +20,7 @@
         @{
             var owner = project.UserProjects.First().User;
             var questionsWithoutAnswer = project.Questions.Count(q => q.Answer == null);
+            var questionsAnsweredBySystem = project.Questions.Count(q => q.Answer != null && !q.AnsweredByHuman);
         }
         <td>
             <p style="text-align:center">
@@ -33,7 +34,7 @@
             Создатель проекта: @owner.Email <br />
             Кол-во участников: @project.UserProjects.Count() <br />
             Неотвеченных вопросов: @questionsWithoutAnswer / @project.Questions.Count()<br />
-            Вопросов отвеченных системой: @project.Questions.Count(q => !q.AnsweredByHuman) <br />
+            Вопросов отвеченных системой: @questionsAnsweredBySystem <br />
         </td>
     </tr>
     }

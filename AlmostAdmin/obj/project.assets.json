@@ -42,6 +42,70 @@
           }
         }
       },
+      "Lucene.Net/4.8.0-beta00005": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.CSharp": "4.4.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/Lucene.Net.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Lucene.Net.dll": {}
+        }
+      },
+      "Lucene.Net.Analysis.Common/4.8.0-beta00005": {
+        "type": "package",
+        "dependencies": {
+          "Lucene.Net": "4.8.0-beta00005"
+        },
+        "compile": {
+          "lib/netstandard2.0/Lucene.Net.Analysis.Common.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Lucene.Net.Analysis.Common.dll": {}
+        }
+      },
+      "Lucene.Net.Queries/4.8.0-beta00005": {
+        "type": "package",
+        "dependencies": {
+          "Lucene.Net": "4.8.0-beta00005",
+          "NETStandard.Library": "1.6.1"
+        },
+        "compile": {
+          "lib/netstandard1.6/Lucene.Net.Queries.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.6/Lucene.Net.Queries.dll": {}
+        }
+      },
+      "Lucene.Net.QueryParser/4.8.0-beta00005": {
+        "type": "package",
+        "dependencies": {
+          "Lucene.Net.Analysis.Common": "4.8.0-beta00005",
+          "Lucene.Net.Queries": "4.8.0-beta00005",
+          "Lucene.Net.Sandbox": "4.8.0-beta00005"
+        },
+        "compile": {
+          "lib/netstandard2.0/Lucene.Net.QueryParser.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Lucene.Net.QueryParser.dll": {}
+        }
+      },
+      "Lucene.Net.Sandbox/4.8.0-beta00005": {
+        "type": "package",
+        "dependencies": {
+          "Lucene.Net": "4.8.0-beta00005",
+          "NETStandard.Library": "1.6.1"
+        },
+        "compile": {
+          "lib/netstandard1.6/Lucene.Net.Sandbox.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.6/Lucene.Net.Sandbox.dll": {}
+        }
+      },
       "MailKit/2.0.2": {
         "type": "package",
         "dependencies": {
@@ -5199,6 +5263,90 @@
         "runtimes/win-arm/native/libuv.dll",
         "runtimes/win-x64/native/libuv.dll",
         "runtimes/win-x86/native/libuv.dll"
+      ]
+    },
+    "Lucene.Net/4.8.0-beta00005": {
+      "sha512": "UprkNBEOLxszKl1YN70zDVRU8wJkV4SBvcWqs822Oqpxj5arvxMRqkvqVhBPajPz3YxObsLxJNdYE62xviQjKQ==",
+      "type": "package",
+      "path": "lucene.net/4.8.0-beta00005",
+      "files": [
+        "lib/net45/Lucene.Net.dll",
+        "lib/net45/Lucene.Net.pdb",
+        "lib/net45/Lucene.Net.xml",
+        "lib/netstandard1.6/Lucene.Net.dll",
+        "lib/netstandard1.6/Lucene.Net.pdb",
+        "lib/netstandard1.6/Lucene.Net.xml",
+        "lib/netstandard2.0/Lucene.Net.dll",
+        "lib/netstandard2.0/Lucene.Net.pdb",
+        "lib/netstandard2.0/Lucene.Net.xml",
+        "lucene.net.4.8.0-beta00005.nupkg.sha512",
+        "lucene.net.nuspec"
+      ]
+    },
+    "Lucene.Net.Analysis.Common/4.8.0-beta00005": {
+      "sha512": "40+ARCsfFky5ykNqri26H3ehjPqRGpyIn4do2MIiL8QbgGrijpgl5GzwiPrZUUIlxlI1e7UhFCLXovl+Hv9qNg==",
+      "type": "package",
+      "path": "lucene.net.analysis.common/4.8.0-beta00005",
+      "files": [
+        "lib/net45/Lucene.Net.Analysis.Common.dll",
+        "lib/net45/Lucene.Net.Analysis.Common.pdb",
+        "lib/net45/Lucene.Net.Analysis.Common.xml",
+        "lib/netstandard1.6/Lucene.Net.Analysis.Common.dll",
+        "lib/netstandard1.6/Lucene.Net.Analysis.Common.pdb",
+        "lib/netstandard1.6/Lucene.Net.Analysis.Common.xml",
+        "lib/netstandard2.0/Lucene.Net.Analysis.Common.dll",
+        "lib/netstandard2.0/Lucene.Net.Analysis.Common.pdb",
+        "lib/netstandard2.0/Lucene.Net.Analysis.Common.xml",
+        "lucene.net.analysis.common.4.8.0-beta00005.nupkg.sha512",
+        "lucene.net.analysis.common.nuspec"
+      ]
+    },
+    "Lucene.Net.Queries/4.8.0-beta00005": {
+      "sha512": "rDTIHnDgvQ21PBHOjVmIjzNhZS09Vklu1H93GIkQiqpO+II1biIMc6+cP7/lVK0VNS4i9fyMVeWeKSPC+ox09g==",
+      "type": "package",
+      "path": "lucene.net.queries/4.8.0-beta00005",
+      "files": [
+        "lib/net45/Lucene.Net.Queries.dll",
+        "lib/net45/Lucene.Net.Queries.pdb",
+        "lib/net45/Lucene.Net.Queries.xml",
+        "lib/netstandard1.6/Lucene.Net.Queries.dll",
+        "lib/netstandard1.6/Lucene.Net.Queries.pdb",
+        "lib/netstandard1.6/Lucene.Net.Queries.xml",
+        "lucene.net.queries.4.8.0-beta00005.nupkg.sha512",
+        "lucene.net.queries.nuspec"
+      ]
+    },
+    "Lucene.Net.QueryParser/4.8.0-beta00005": {
+      "sha512": "qSVVDh7Uoa/yPOzo0QUXyHxFfaLwbr3p1fD6lUgBH+ucKK6qmMCEM2SHXCBssfrS7OTlgHFK3GrHaq1Det8CxQ==",
+      "type": "package",
+      "path": "lucene.net.queryparser/4.8.0-beta00005",
+      "files": [
+        "lib/net45/Lucene.Net.QueryParser.dll",
+        "lib/net45/Lucene.Net.QueryParser.pdb",
+        "lib/net45/Lucene.Net.QueryParser.xml",
+        "lib/netstandard1.6/Lucene.Net.QueryParser.dll",
+        "lib/netstandard1.6/Lucene.Net.QueryParser.pdb",
+        "lib/netstandard1.6/Lucene.Net.QueryParser.xml",
+        "lib/netstandard2.0/Lucene.Net.QueryParser.dll",
+        "lib/netstandard2.0/Lucene.Net.QueryParser.pdb",
+        "lib/netstandard2.0/Lucene.Net.QueryParser.xml",
+        "lucene.net.queryparser.4.8.0-beta00005.nupkg.sha512",
+        "lucene.net.queryparser.nuspec"
+      ]
+    },
+    "Lucene.Net.Sandbox/4.8.0-beta00005": {
+      "sha512": "b6S7vc6IGLDNUBeYwEY03AgngoRra8c/DH76S6EWtCw38Oq4jCUtHLrc25sLHV1T/U75lSfn62/BttGTOvPzGQ==",
+      "type": "package",
+      "path": "lucene.net.sandbox/4.8.0-beta00005",
+      "files": [
+        "lib/net45/Lucene.Net.Sandbox.dll",
+        "lib/net45/Lucene.Net.Sandbox.pdb",
+        "lib/net45/Lucene.Net.Sandbox.xml",
+        "lib/netstandard1.6/Lucene.Net.Sandbox.dll",
+        "lib/netstandard1.6/Lucene.Net.Sandbox.pdb",
+        "lib/netstandard1.6/Lucene.Net.Sandbox.xml",
+        "lucene.net.sandbox.4.8.0-beta00005.nupkg.sha512",
+        "lucene.net.sandbox.nuspec"
       ]
     },
     "MailKit/2.0.2": {
@@ -13500,6 +13648,10 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.0": [
+      "Lucene.Net >= 4.8.0-beta00005",
+      "Lucene.Net.Analysis.Common >= 4.8.0-beta00005",
+      "Lucene.Net.Queries >= 4.8.0-beta00005",
+      "Lucene.Net.QueryParser >= 4.8.0-beta00005",
       "MailKit >= 2.0.2",
       "Microsoft.AspNetCore.All >= 2.0.5",
       "Microsoft.NETCore.App >= 2.0.0",
@@ -13514,9 +13666,6 @@
   },
   "project": {
     "version": "1.0.0",
-    "restoreSettings": {
-      "hideWarningsAndErrors": true
-    },
     "restore": {
       "projectUniqueName": "C:\\Users\\Denis32\\Documents\\Visual Studio 2017\\Projects\\AlmostAdmin\\AlmostAdmin\\AlmostAdmin.csproj",
       "projectName": "AlmostAdmin",
@@ -13554,6 +13703,22 @@
     "frameworks": {
       "netcoreapp2.0": {
         "dependencies": {
+          "Lucene.Net": {
+            "target": "Package",
+            "version": "[4.8.0-beta00005, )"
+          },
+          "Lucene.Net.Analysis.Common": {
+            "target": "Package",
+            "version": "[4.8.0-beta00005, )"
+          },
+          "Lucene.Net.Queries": {
+            "target": "Package",
+            "version": "[4.8.0-beta00005, )"
+          },
+          "Lucene.Net.QueryParser": {
+            "target": "Package",
+            "version": "[4.8.0-beta00005, )"
+          },
           "MailKit": {
             "target": "Package",
             "version": "[2.0.2, )"

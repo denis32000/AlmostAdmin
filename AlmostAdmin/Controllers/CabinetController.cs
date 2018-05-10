@@ -31,10 +31,12 @@ namespace AlmostAdmin.Controllers
                 return RedirectToAction("Error", "Home");
 
             var projects = _applicationContext.Projects
+                .Include(p => p.Questions)
+                    .ThenInclude(q => q.Answer)
                 .Include(p => p.UserProjects)
-                    .ThenInclude(up => up.User).ToList();
-                //.Where(p => p.UserProjects.FirstOrDefault(up => up.UserId == user.Id) != null)
-                //.ToList();
+                    .ThenInclude(up => up.User)
+                .Where(p => p.UserProjects.FirstOrDefault(up => up.UserId == user.Id) != null)
+                .ToList();
 
             if (projects.Any())
             {

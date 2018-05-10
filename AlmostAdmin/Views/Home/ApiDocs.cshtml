@@ -1,0 +1,161 @@
+﻿@{
+    ViewData["Title"] = "About";
+}
+<h2>Документация</h2>
+
+Для вызова API AlmostAdmin необходимо передать параметры data и signature (Server - Server) POST методом, где: <br />
+
+data - json строка с параметрами APIs закодированная функцией base64, base64_encode( json_string ),<br />
+signature - уникальная подпись каждого запроса base64_encode( sha1( private_key + data + private_key) ),<br />
+base64_encode - возвращает строку, закодированную методом base64,<br />
+sha1 - возвращается хэш в виде бинарной строки из 20 символов.<br />
+
+полученные data и signature необходимо отправить на url http://localhost:65556/api/question<br />
+Статус операции будет отправлен на server_url.<br />
+
+Формирование data и signature, пример:<br />
+
+Пример создания json_string:<br />
+json_string = {"public_key":"i00000000","version":"3","action":"pay","amount":"3","currency":"UAH","description":"test","order_id":"000001"}<br />
+
+Пример кодирования json_string функцией base64_encode, компания получает data:
+data = eyJwdWJsaWNfa2V5IjoiaTAwMDAwMDAwIiwidmVyc2lvbiI6IjMiLCJhY3Rpb24iOiJwYXkiLCJhbW91bnQiOiIzIiwiY3VycmVuY3kiOiJVQUgiLCJkZXNjcmlwdGlvbiI6InRlc3QiLCJvcmRlcl9pZCI6IjAwMDAwMSJ9
+                                              <br />
+Пример формирования signature, компания формирует строку sign_string путем конкатенации private_key + data + private_key:<br />
+                                                                                                                         <br />
+sign_string = a4825234f4bae72a0be04eafe9e8e2bada209255eyJwdWJsaWNfa2V5IjoiaTAwMDAwMDAwIiwidmVyc2lvbiI6IjMiLCJhY3Rpb24iOiJwYXkiLCJhbW91bnQiOiIzIiwiY3VycmVuY3kiOiJVQUgiLCJkZXNjcmlwdGlvbiI6InRlc3QiLCJvcmRlcl9pZCI6IjAwMDAwMSJ9a4825234f4bae72a0be04eafe9e8e2bada209255
+
+После применения функций base64_encode( sha1( sign_string) ) получаем строку:<br />
+signature = wR+UZDC4jjeL/qUOvIsofIWpZh8=<br />
+
+
+<div class="table_mob">
+	<table class="table_all">
+
+		<tr class="table_header">
+			<th class="table_header_one">Parameter</th>
+			<th class="table_header_two">Required</th>
+			<th class="table_header_two">Type</th>
+			<th class="table_header_three">Description</th>
+		</tr>
+
+		<tr class="border_table">
+			<td class="table_block_one">version</td>
+			<td class="table_block_two">Required</td>
+			<td class="table_block_two">Number</td>
+			<td class="table_block_three">Версия API. Текущее значение - <span class="code_doc">3</span></td>
+		</tr>
+
+		<tr class="border_table">
+			<td class="table_block_one">public_key</td>
+			<td class="table_block_two">Required</td>
+			<td class="table_block_two">String</td>
+			<td class="table_block_three">Публичный ключ - идентификатор магазина. Получить ключ можно в <a href="https://www.liqpay.ua/ru/admin/business" target="_blank" class="link_text_table">настройках магазина</a></td>
+		</tr>
+
+		<tr class="border_table">
+			<td class="table_block_one">action</td>
+			<td class="table_block_two">Required</td>
+			<td class="table_block_two">String</td>
+			<td class="table_block_three"><span class="code_doc">p2p</span></td>
+		</tr>
+		<tr class="border_table">
+			<td class="table_block_one">amount</td>
+			<td class="table_block_two">Required</td>
+			<td class="table_block_two">Number</td>
+			<td class="table_block_three">Сумма платежа.Например: <span class="code_doc">5</span>, <span class="code_doc">7.34</span></td>
+		</tr>
+		
+
+		
+		<tr class="border_table">
+			<td class="table_block_one">card</td>
+			<td class="table_block_two">Required</td>
+			<td class="table_block_two">String</td>
+			<td class="table_block_three">Номер карты плательщика</td>
+		</tr>
+		
+
+		
+		<tr class="border_table">
+			<td class="table_block_one">card_cvv</td>
+			<td class="table_block_two">Required</td>
+			<td class="table_block_two">String</td>
+			<td class="table_block_three">CVV/CVV2</td>
+		</tr>
+		
+
+		
+		<tr class="border_table">
+			<td class="table_block_one">card_exp_month</td>
+			<td class="table_block_two">Required</td>
+			<td class="table_block_two">String</td>
+			<td class="table_block_three">Месяц срока действия карты плательщика. Например: <span class="code_doc">08</span></td>
+		</tr>
+		<tr class="border_table">
+			<td class="table_block_one">card_exp_year</td>
+			<td class="table_block_two">Required</td>
+			<td class="table_block_two">String</td>
+			<td class="table_block_three">Год срока действия карты плательщика. Например: <span class="code_doc">19</span></td>
+		</tr>
+		
+		<tr class="border_table">
+			<td class="table_block_one">currency</td>
+			<td class="table_block_two">Required</td>
+			<td class="table_block_two">String</td>
+			<td class="table_block_three">Валюта платежа. Возможные значения: <span class="code_doc">USD</span>, <span class="code_doc">EUR</span>, <span class="code_doc">RUB</span>, <span class="code_doc">UAH</span></td>
+		</tr>
+		
+
+		
+		<tr class="border_table">
+			<td class="table_block_one">description</td>
+			<td class="table_block_two">Required</td>
+			<td class="table_block_two">String</td>
+			<td class="table_block_three">Назначение платежа.</td>
+		</tr>
+		<tr class="border_table">
+			<td class="table_block_one">ip</td>
+			<td class="table_block_two">Required</td>
+			<td class="table_block_two">String</td>
+			<td class="table_block_three">IP клиента</td>
+		</tr>
+		
+
+		
+		<tr class="border_table">
+			<td class="table_block_one">order_id</td>
+			<td class="table_block_two">Required</td>
+			<td class="table_block_two">String</td>
+			<td class="table_block_three">Уникальный ID покупки в Вашем магазине. Максимальная длина <b>255</b> символов.</td>
+		</tr>
+		<tr class="border_table">
+			<td class="table_block_one">phone</td>
+			<td class="table_block_two">Required</td>
+			<td class="table_block_two">String</td>
+			<td class="table_block_three">Телефон плательщика. На этот номер будет отправлен OTP пароль подтверждения платежа. Телефон указывается в международном формате (Украина <span class="code_doc">+380</span>, Россия <span class="code_doc">+7</span>). Например: +380950000001 (с +) или 380950000001 (без +)</td>
+		</tr>
+		<tr class="border_table">
+			<td class="table_block_one">language</td>
+			<td class="table_block_two_grey">Optional</td>
+			<td class="table_block_two">String</td>
+			<td class="table_block_three">Язык клиента <span class="code_doc">ru</span>, <span class="code_doc">uk</span>, <span class="code_doc">en</span></td>
+		</tr>
+		<tr class="border_table">
+			<td class="table_block_one">prepare</td>
+			<td class="table_block_two_grey">Optional</td>
+			<td class="table_block_two">String</td>
+			<td class="table_block_three">Предподготовка платежа. Этот режим позволяет определить все ли данные заполнены, нужна ли 3DS проверка карты, не превышен ли лимит. Средства с карты плательщика не списываются. Для включения режима необходимо передать значение <span class="code_doc">1</span></td>
+		</tr>
+		
+
+		
+		<tr class="border_table">
+			<td class="table_block_one">server_url</td>
+			<td class="table_block_two_grey">Optional</td>
+			<td class="table_block_two">String</td>
+			<td class="table_block_three">URL API в Вашем магазине для уведомлений об изменении статуса платежа (<span class="code_doc">сервер</span>-&gt;<span class="code_doc">сервер</span>). Максимальная длина <b>510</b> символов. <a href="/documentation/api/callback" class="link_text_table">Подробнее</a> </td>
+		</tr>
+
+	</table>
+</div>

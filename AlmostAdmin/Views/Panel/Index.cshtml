@@ -46,75 +46,97 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-5">
-        <table class="table table-bordered">
-            @foreach (var question in Model.Questions)
-            {
-                <tr>
-                    <td>
-                        @question.Text [
-                        @foreach (var tag in question.QuestionTags)
-                        {
-                            <span>@tag.Tag.Text,</span>
-                        }]
-                    </td>
-                    <td>
-                        @if (question.AnsweredByHuman)
-                        {
-                            <span>
-                                (Человек): @question.Answer.Text
-                                <button onclick="answerOnQuestion(@question.Id)">
-                                    Изменить ответ
-                                </button>
-                                // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
-                            </span>
-                        }
-                        else if (question.Answer != null)
-                        {
-                            <span>
-                                (Система): @question.Answer.Text
-                                <button onclick="answerOnQuestion(@question.Id)">
-                                    Изменить ответ
-                                </button>
-                                // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
-                            </span>
-                        }
-                        else
-                        {
-                            <span>
-                                Этот вопрос еще без ответа!
-                                <button onclick="answerOnQuestion(@question.Id)">
-                                    Ответить
-                                </button>
-                                // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
-                            </span>
-                        }
-                    </td>
-                </tr>
-            }
-        </table>
-    </div>
-
-    <div class="col-md-3">
-        Участники проекта
-        @if (owner.Email.Equals(User.Identity.Name))
-        {
-            <button class="btn btn-default" onclick="inviteNewUsers(@Model.Id)">Пригласить</button>
-            <button class="btn btn-default" onclick="usersStats(@Model.Id)">Статистика</button>
-        }
-        @Html.Partial("_ProjectUsers", Model.UserProjects.Select(up => up.User))
-    </div>
-    <div class="col-md-4">
-        <div id="container" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
-    </div>
-</div>
-
 <form onsubmit="createNewQuestion(event)" id="myForm">
     <input name="projectId" type="hidden" value="@Model.Id" />
     <input name="questionText" title="Введите текст вопроса" />
     <button type="submit">Создать</button>
 </form>
+
+<div class="container">
+    <div class="row" style="border:solid;border-color:red">
+        <div class="col-md-5">
+                @foreach (var question in Model.Questions)
+                {
+                    <div class="row" style="border:solid">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <b>Текст вопроса:</b><br />
+                                @question.Text
+                            </div>
+                            <div class="row">
+                                <b>Теги вопроса:</b>
+                                [
+                                @if (question.QuestionTags.Count() > 0)
+                                {
+                                    @foreach (var tag in question.QuestionTags)
+                                    {
+                                        <span>@tag.Tag.Text,</span>
+                                    }
+                                }
+                                else
+                                {
+                                    @: <span style="color:gray">без тегов</span>
+                                }
+                                ]
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            @if (question.AnsweredByHuman)
+                            {
+                                <div class="row">
+                                    <span style="width:100%;background-color:forestgreen;text-align:center">Ответил Модератор</span>
+                                </div>
+                                <div class="row">
+                                    <b>Текст ответа:</b><br />
+                                    @question.Answer.Text
+                                </div>
+                                <div class="row">
+                                    <button class="btn btn-default" onclick="answerOnQuestion(@question.Id)">
+                                        Изменить ответ
+                                    </button>
+                                </div>
+                                // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
+                            }
+                            else if (question.Answer != null)
+                            {
+                                <span>
+                                    (Система): @question.Answer.Text
+                                    <button onclick="answerOnQuestion(@question.Id)">
+                                        Изменить ответ
+                                    </button>
+                                    // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
+                                </span>
+                            }
+                            else
+                            {
+                                <span>
+                                    Этот вопрос еще без ответа!
+                                    <button onclick="answerOnQuestion(@question.Id)">
+                                        Ответить
+                                    </button>
+                                    // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
+                                </span>
+                            }
+                        </div>
+                    </div>
+                }
+        </div>
+
+        <div class="col-md-3">
+            Участники проекта
+            @if (owner.Email.Equals(User.Identity.Name))
+            {
+                <button class="btn btn-default" onclick="inviteNewUsers(@Model.Id)">Пригласить</button>
+                <button class="btn btn-default" onclick="usersStats(@Model.Id)">Статистика</button>
+            }
+            @Html.Partial("_ProjectUsers", Model.UserProjects.Select(up => up.User))
+        </div>
+        <div class="col-md-4">
+            <div id="container" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
+            @*@Html.Partial("_UsersStatistic", Model.UserProjects.Select(up => up.User))*@
+        </div>
+    </div>
+</div>
 
 
 <div id="prompt-form-container">
@@ -136,20 +158,43 @@
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script>
+
+        @{
+            var users = Model.UserProjects.Select(up => up.User.UserName);
+            var answers = Model.UserProjects.Select(up => up.User.Answers.Count());
+
+            var dictionary = users.Zip(answers, (k, v) => new { k, v } )
+              .ToDictionary(x => x.k, x => x.v);
+        }
+
+        var usersList = [];
+        var answersList = [];
+
+        @foreach(var kvp in dictionary)
+        {
+            @: usersList.push('@kvp.Key');
+            @: answersList.push(@kvp.Value);
+        }
+        
+        console.log(usersList);
+        console.log(answersList);
+
+
         Highcharts.chart('container', {
             chart: {
                 type: 'bar'
             },
             title: {
-                text: 'Stacked bar chart'
+                text: 'Активность участников проекта'
             },
             xAxis: {
-                categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
+                categories: usersList
             },
             yAxis: {
                 min: 0,
+                allowDecimals: false,
                 title: {
-                    text: 'Total fruit consumption'
+                    text: 'Количество отвеченных вопросов'
                 }
             },
             legend: {
@@ -161,15 +206,16 @@
                 }
             },
             series: [{
-                name: 'John',
-                data: [5, 3, 4, 7, 2]
-            }, {
-                name: 'Jane',
-                data: [2, 2, 3, 2, 1]
-            }, {
-                name: 'Joe',
-                data: [3, 4, 4, 2, 5]
+                name: 'Ответы',
+                data: answersList
             }]
+            //}, {
+            //    name: 'Jane',
+            //    data: [2, 2, 3, 2, 1]
+            //}, {
+            //    name: 'Joe',
+            //    data: [3, 4, 4, 2, 5]
+            //}]
         });
 
     function activateFastAnswers() {

@@ -36,7 +36,7 @@ namespace AlmostAdmin
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationContext>();
 
-            services.AddSingleton<IntelligenceRequestAdapter>();
+            services.AddSingleton<LuceneProcessor>();
             services.AddTransient<ProcessorService>();
             services.AddTransient<ResponseSenderService>();
 

@@ -12,7 +12,7 @@ using System;
 namespace AlmostAdmin.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20180329160912_Initial")]
+    [Migration("20180330191754_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,9 +33,15 @@ namespace AlmostAdmin.Migrations
 
                     b.Property<string>("Text");
 
+                    b.Property<int>("UserId");
+
+                    b.Property<string>("UserId1");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
+
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Answers");
                 });
@@ -291,6 +297,10 @@ namespace AlmostAdmin.Migrations
                         .WithMany()
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("AlmostAdmin.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("AlmostAdmin.Models.Question", b =>

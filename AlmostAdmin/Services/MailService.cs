@@ -9,7 +9,7 @@ namespace AlmostAdmin.Services
 {
     public class EmailService
     {
-        public async void SendEmailAsync(string emailToWhom, string subject, string message, string nameFromWhom = "Almost Admin")
+        public async Task SendEmailAsync(string emailToWhom, string subject, string message, string nameFromWhom = "Almost Admin")
         {
             var emailMessage = new MimeMessage();
             var emailFromWhom = "postmaster@bitco.in.ua";
