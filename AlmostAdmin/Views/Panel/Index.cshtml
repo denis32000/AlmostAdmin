@@ -5,139 +5,341 @@
     var owner = Model.UserProjects.First().User;
 }
 
-<ol>
-    <li><a asp-action="Questions">Список вопросов за всё время</a></li>
-    <li><a asp-action="Answers">Список ответов за всё время</a></li>
-</ol>
+@*<ol>
+        <li><a asp-action="Questions">Список вопросов за всё время</a></li>
+        <li><a asp-action="Answers">Список ответов за всё время</a></li>
+    </ol>*@
+<br />
+<br />
+<br />
+<br />
 
-<div style="border:dashed">
-    <b>Вы можете установить приоритет отправки ответов</b>
-    В случае, если Вы хотите получать ответы в режиме онлайн без подтверждения администрацией
-    Вы можете активировать опцию "Быстрые ответы", и система сама будет подбирать возможный ответ
-    <span style="color:forestgreen">* Ответ на вопрос будет в ожидании подтверждения человеком и если он изменится, ответ будет отправлен на Ваш ресурс повторно!</span>
-    @if (!Model.AnswerWithoutApprove)
-    {
-        <button class="btn btn-success" onclick="activateFastAnswers()">Активировать "Быстрые ответы"</button>
-    }
-    else
-    {
-        <button class="btn btn-danger" onclick="deactivateFastAnswers()">Деактивировать "Быстрые ответы"</button>
-    }
-</div>
-<p>
-    <h4>Данные для создания запросов на AlmostAdmin API</h4>
-    Приватный ключ от проекта: <input class="input-sm" style="width:300px" type="text" disabled="disabled" value="@Model.PrivateKey" />
-    <br />Идентификатор проекта: <input class="input-sm" style="width:100px" type="text" disabled="disabled" value="@Model.Id" />
-</p>
-
-<div class="center-block btn-group-vertical">
-
-    <div>Сортировка вопросов</div>
-    <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-            Dropdown Example
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-            <li><a href="#">HTML</a></li>
-            <li><a href="#">CSS</a></li>
-            <li><a href="#">JavaScript</a></li>
-        </ul>
+<div class="row">
+    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Вопросы / Ответы</a>
+        <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Участники</a>
+        <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">Настройки</a>
+    </div>
+    <div class="tab-content" id="v-pills-tabContent">
+        <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">...</div>
+        <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">...</div>
+        <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">...</div>
     </div>
 </div>
 
-<form onsubmit="createNewQuestion(event)" id="myForm">
-    <input name="projectId" type="hidden" value="@Model.Id" />
-    <input name="questionText" title="Введите текст вопроса" />
-    <button type="submit">Создать</button>
-</form>
 
-<div class="container">
-    <div class="row" style="border:solid;border-color:red">
-        <div class="col-md-5">
-                @foreach (var question in Model.Questions)
-                {
-                    <div class="row" style="border:solid">
-                        <div class="col-md-6">
-                            <div class="row">
-                                <b>Текст вопроса:</b><br />
-                                @question.Text
-                            </div>
-                            <div class="row">
-                                <b>Теги вопроса:</b>
-                                [
-                                @if (question.QuestionTags.Count() > 0)
-                                {
-                                    @foreach (var tag in question.QuestionTags)
-                                    {
-                                        <span>@tag.Tag.Text,</span>
-                                    }
-                                }
-                                else
-                                {
-                                    @: <span style="color:gray">без тегов</span>
-                                }
-                                ]
+
+<div class="project-users bg-light">
+    <div class="project-users-button mb-2">
+        Участники проекта
+        @if (owner.Email.Equals(User.Identity.Name))
+        {
+            <button class="btn btn-sm btn-outline-dark" onclick="inviteNewUsers(@Model.Id)">Пригласить</button>
+            @*<button class="btn btn-sm btn-outline-dark" onclick="usersStats(@Model.Id)">Статистика</button>*@
+        }
+    </div>
+    @Html.Partial("_ProjectUsers", Model.UserProjects.Select(up => up.User))
+</div>
+
+
+
+<div class="row mt-3">
+    <div class="col-md-12">
+        <h1 class="display-4">
+            @Model.Name
+        </h1>
+        <hr />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div id="accordion">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Данные для API
+                        </button>
+                    </h5>
+                </div>
+
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body">
+                        <div class="col-md-4">
+
+                            <div class="form-group">
+                                <label>Идентификатор:</label>
+                                <input type="text" value="@Model.Id" class="form-control col-md-4" readonly />
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            @if (question.AnsweredByHuman)
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>Приватный ключ:</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1"><i class="fas fa-lock"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control col-md-10" value="@Model.PrivateKey" aria-label="Username" aria-describedby="basic-addon1" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Collapsible Group Item #2
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                    <div class="card-body">
+                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingThree">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Collapsible Group Item #3
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                    <div class="card-body">
+                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="row">
+            <div class="col-md-7">
+                <h4 class="mb-3">Данные для API</h4>
+                <div class="row">
+                    <div class="col-md-4">
+
+                        <div class="form-group">
+                            <label>Идентификатор:</label>
+                            <input type="text" value="@Model.Id" class="form-control col-md-4" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label>Приватный ключ:</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-lock"></i></span>
+                                </div>
+                                <input type="text" class="form-control col-md-10" value="@Model.PrivateKey" aria-label="Username" aria-describedby="basic-addon1" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="card project-cards">
+                        <div class="card-body">
+                            <h5 class="card-title">Вы можете установить приоритет отправки ответов</h5>
+                            <p class="card-text">
+
+                                В случае, если Вы хотите получать ответы в режиме онлайн без подтверждения администрацией
+                                Вы можете активировать опцию "Быстрые ответы", и система сама будет подбирать возможный ответ
+                                <span style="color:forestgreen">* Ответ на вопрос будет в ожидании подтверждения человеком и если он изменится, ответ будет отправлен на Ваш ресурс повторно!</span>
+                            </p>
+                            @if (!Model.AnswerWithoutApprove)
                             {
-                                <div class="row">
-                                    <span style="width:100%;background-color:forestgreen;text-align:center">Ответил Модератор</span>
-                                </div>
-                                <div class="row">
-                                    <b>Текст ответа:</b><br />
-                                    @question.Answer.Text
-                                </div>
-                                <div class="row">
-                                    <button class="btn btn-default" onclick="answerOnQuestion(@question.Id)">
-                                        Изменить ответ
-                                    </button>
-                                </div>
-                                // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
-                            }
-                            else if (question.Answer != null)
-                            {
-                                <span>
-                                    (Система): @question.Answer.Text
-                                    <button onclick="answerOnQuestion(@question.Id)">
-                                        Изменить ответ
-                                    </button>
-                                    // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
-                                </span>
+                                <button class="btn btn-success" onclick="switchFastAnswers()">Активировать "Быстрые ответы"</button>
                             }
                             else
                             {
-                                <span>
-                                    Этот вопрос еще без ответа!
-                                    <button onclick="answerOnQuestion(@question.Id)">
-                                        Ответить
-                                    </button>
-                                    // TODO: тут предлагать выбор из возможных похожих вопросов и ответов к ним
-                                </span>
+                                <button class="btn btn-danger" onclick="switchFastAnswers()">Деактивировать "Быстрые ответы"</button>
                             }
                         </div>
                     </div>
-                }
-        </div>
+                </div>
+            </div>
 
-        <div class="col-md-3">
-            Участники проекта
-            @if (owner.Email.Equals(User.Identity.Name))
-            {
-                <button class="btn btn-default" onclick="inviteNewUsers(@Model.Id)">Пригласить</button>
-                <button class="btn btn-default" onclick="usersStats(@Model.Id)">Статистика</button>
-            }
-            @Html.Partial("_ProjectUsers", Model.UserProjects.Select(up => up.User))
-        </div>
-        <div class="col-md-4">
-            <div id="container" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
-            @*@Html.Partial("_UsersStatistic", Model.UserProjects.Select(up => up.User))*@
+            <div class="col-md-5 mb-5">
+                <h4 class="mb-3">Активность участников проекта</h4>
+                <div id="container" class="project-cards" style="min-width: 365px; max-width: 800px; height: 300px; margin: 0 auto"></div>
+            </div>
         </div>
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-12">
+
+
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h5>Сортировка вопросов</h5>
+        <hr />
+    </div>
+
+</div>
+
+<div class="row justify-content-between mb-3">
+    <div class="col-md-3 text-right">
+        <div class="dropdown">
+            <button class="btn btn-outline-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                <i class="fas fa-align-left"></i> Сортировка
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#">HTML</a></li>
+                <li><a href="#">CSS</a></li>
+                <li><a href="#">JavaScript</a></li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+@* Модальное окно для СОЗДАТЬ ВОПРОС *@
+<div class="modal fade" id="createQuestionModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Создать вопрос</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="createNewQuestion(event)" id="myForm">
+                    <input name="projectId" type="hidden" value="@Model.Id" />
+                    @*<input name="questionText" title="Введите текст вопроса" />*@
+                    <textarea name="questionText" cols="40" rows="3" placeholder="Введите текст вопроса"></textarea>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" data-dismiss="modal">Создать</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </form>
+            </div>
+            @*<div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Создать вопрос</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                </div>*@
+        </div>
+    </div>
+</div>
+
+@* Модальное окно для ОТВЕТИТЬ НА ВОПРОС *@
+<div class="modal fade" id="answerOnQuestionModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ответить на вопрос</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <textarea name="questionText" id="answerOnQuestionInput" class="col-md-12" rows="3" placeholder="Введите текст вопроса"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Ответить</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Модальное окно для ПОКАЗАТЬ ПОХОЖИЕ *@
+<div class="modal fade" id="showSimilarModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Список похожих</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="similarQuestionsContainer">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-3" style="border-right: 1px solid #00000029;height: 427px;display: flex;flex-direction: column;justify-content: space-between;">
+        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            @*<a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" role="tab" aria-controls="v-pills-home" aria-selected="true">Все</a>
+                <a class="nav-link" id="v-pills-profile-tab"  data-toggle="pill" role="tab" aria-controls="v-pills-profile" aria-selected="false">Без ответа</a>
+                <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" role="tab" aria-controls="v-pills-messages" aria-selected="false">Ответ от модератора</a>
+                <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" role="tab" aria-controls="v-pills-settings" aria-selected="false">Ответ от системы</a>*@
+
+            @*<button onclick="filterQuestionsByPriority(0)">Все</button>
+                <button onclick="filterQuestionsByPriority(1)">Ответ от системы</button>
+                <button onclick="filterQuestionsByPriority(2)">Без ответа</button>
+                <button onclick="filterQuestionsByPriority(3)">Ответ от модератора</button>*@
+
+            <ul class="list-group" id="mainSortUl">
+                <li class="list-group-item" onclick="SelectNavItem(0)">Все</li>
+                <li class="list-group-item" onclick="SelectNavItem(1)">Ответ от системы</li>
+                <li class="list-group-item" onclick="SelectNavItem(2)">Без ответа</li>
+                <li class="list-group-item" onclick="SelectNavItem(3)">Ответ от модератора</li>
+            </ul>
+        </div>
+        <button class="btn btn-success" data-toggle="modal" data-target="#createQuestionModal" type="button"><i class="fas fa-plus"></i> Создать вопрос</button>
+    </div>
+
+    <div class="col-9">
+        <div id="questionsTableContainer" style=""></div>
+        @* scroll bar *@
+    </div>
+</div>
 
 <div id="prompt-form-container">
     <form id="prompt-form">
@@ -151,14 +353,89 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-    <!--
-    <script type="text/javascript" src="~/lib/highchartsjs/js/highcharts.js"></script>
-    <script type="text/javascript" src="~/lib/highchartsjs/js/modules/exporting.js"></script>
-        -->
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script>
 
+        function toggleAnswerOnQuestionModal(questionId, event) {
+            event.preventDefault();
+
+            console.log('ID:', questionId);
+
+            $('#answerOnQuestionModal').modal('toggle');
+
+
+            $.post('@Url.Action("Answer")',
+            {
+                projectId: @Model.Id,
+                questionId: questionId,
+                answerText: value
+            },
+            function (response) {
+                LoadTableDataForCurrentPage();
+            });
+        }
+
+        var currentPage = 1;
+        var currentPriority = null;
+        var currentText = null;
+
+        function LoadFilteredData(page, priority, text) {
+            $.post('@Url.Action("GetProjectQuestions")',
+            {
+                projectId: @Model.Id,
+                page: page,
+                priority: priority,
+                text: text
+            },
+            function (response) {
+                currentPage = page;
+                currentPriority = priority;
+                currentText = text;
+
+                $("#questionsTableContainer").html(response);
+            });
+        }
+
+        function LoadTableDataForPage(page) {
+            LoadFilteredData(page, currentPriority, currentText);
+        }
+
+        function LoadTableDataForCurrentPage() {
+            LoadFilteredData(currentPage, currentPriority, currentText);
+        }
+
+        // priority: 0-all, 1-system, 2-empty, 3-human
+        function filterQuestions(priority, text) {
+            LoadFilteredData(currentPage, priority, text);
+        }
+
+        function filterQuestionsByPriority(priority) {
+            filterQuestions(priority, currentText);
+        }
+
+        function filterQuestionsByText(text) {
+            filterQuestions(currentPriority, text);
+        }
+
+        function SelectNavItem(itemId) {
+            filterQuestionsByPriority(itemId);
+
+            var lis = $("#mainSortUl > LI");
+
+            $.each(lis, function (i) {
+                if (i == itemId) {
+                    $(this).addClass('active');
+                }
+                else {
+                    $(this).removeClass('active');
+                }
+            });
+        }
+
+        SelectNavItem(0); // Загружаем всю инфу для 1 страницы
+
+        /////////////////////////////////////////// CHART ///////////////////////////////////////////
         @{
             var users = Model.UserProjects.Select(up => up.User.UserName);
             var answers = Model.UserProjects.Select(up => up.User.Answers.Count());
@@ -175,7 +452,7 @@
             @: usersList.push('@kvp.Key');
             @: answersList.push(@kvp.Value);
         }
-        
+
         console.log(usersList);
         console.log(answersList);
 
@@ -185,16 +462,20 @@
                 type: 'bar'
             },
             title: {
-                text: 'Активность участников проекта'
+                text: null//'Активность участников проекта',
+
             },
             xAxis: {
-                categories: usersList
+                categories: usersList,
+                labels: {
+                    rotation: -45
+                }
             },
             yAxis: {
                 min: 0,
                 allowDecimals: false,
                 title: {
-                    text: 'Количество отвеченных вопросов'
+                    text: 'Отвеченные вопросы'
                 }
             },
             legend: {
@@ -218,8 +499,8 @@
             //}]
         });
 
-    function activateFastAnswers() {
-        $.post('@Url.Action("ActivateFastAnswers")',
+        function switchFastAnswers() {
+        $.post('@Url.Action("SwitchFastAnswers")',
                 {
                     projectId: @Model.Id
                 },
@@ -229,93 +510,81 @@
                         return;
                     }
 
-                    alert("Функция активирована!");
                     window.location = window.location;
                 });
-    }
-    function deactivateFastAnswers() {
-        $.post('@Url.Action("DeactivateFastAnswers")',
-                {
-                    projectId: @Model.Id
-                },
-                function (response) {
-                    if (!response.success) {
-                        alert(response.message);
-                        return;
-                    }
+        }
 
-                    alert("Функция активирована!");
-                    window.location = window.location;
-                });
-    }
+        function inviteNewUsers(projectId) {
+            showPrompt("Введите почту:", function (emailToInvite) {
+                $.post('@Url.Action("InviteUser")',
+                    {
+                        projectId: projectId,
+                        emailToInvite: emailToInvite
+                    },
+                    function (response) {
+                        if (!response.success) {
+                            alert(response.message);
+                            return;
+                        }
 
-    function inviteNewUsers(projectId) {
-        showPrompt("Введите почту:", function (emailToInvite) {
-            $.post('@Url.Action("InviteUser")',
-                {
-                    projectId: projectId,
-                    emailToInvite: emailToInvite
-                },
-                function (response) {
-                    if (!response.success) {
-                        alert(response.message);
-                        return;
-                    }
+                        alert("Пользователь успешно добавлен в проект!");
+                        window.location = window.location;
+                    });
+            });
+        }
 
-                    alert("Пользователь успешно добавлен в проект!");
-                    window.location = window.location;
-                });
-        });
-    }
+        function createNewQuestion(event) {
+            event.preventDefault();
 
-    function createNewQuestion(event) {
-        event.preventDefault();
+            $.post('@Url.Action("CreateQuestion")', $('#myForm').serialize(),
+                function () {
+                    LoadTableDataForCurrentPage();
+            });
+        }
 
-        $.post('@Url.Action("CreateQuestion")', $('#myForm').serialize(),
-            function () {
-                window.location = window.location;
-        });
-    }
+        // TODO: move this function to global js file
+        function answerOnQuestion(questionId, event) {
+            event.preventDefault();
+            showPrompt("Введите ответ на вопрос:", function (value) {
+                $.post('@Url.Action("Answer")',
+                    {
+                        projectId: @Model.Id,
+                        questionId: questionId,
+                        answerText: value
+                    },
+                    function (response) {
+                        LoadTableDataForCurrentPage();
+                    });
+            });
+        }
 
-    // TODO: move this function to global js file
-    function answerOnQuestion(questionId) {
-        showPrompt("Введите ответ на вопрос:", function (value) {
-            $.post('@Url.Action("Answer")',
+        function approveSystemAnswer(questionId, answerId, fromModal) {
+            $.post('@Url.Action("Approve")',
                 {
                     projectId: @Model.Id,
                     questionId: questionId,
-                    answerText: value
+                    answerId: answerId
                 },
                 function (response) {
-                    // TODO: make ajax updated table
-                    window.location = window.location;
+                    if (fromModal)
+                        $('#showSimilarModal').modal('toggle');
+
+                    LoadTableDataForCurrentPage();
                 });
-        });
-    }
+        }
+
+        function showSimilarTo(questionId, event) {
+            event.preventDefault();
+            $.post('@Url.Action("GetSimilar")',
+                {
+                    projectId: @Model.Id,
+                    questionId: questionId
+                },
+                function (response) {
+                    $('#showSimilarModal').modal('toggle');
+                    $('#similarQuestionsContainer').html(response);
+                });
+        }
     </script>
 }
-<!--
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-    Launch demo modal
-</button>
 
- Modal
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div> -->

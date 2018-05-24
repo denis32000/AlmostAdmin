@@ -1,0 +1,25 @@
+﻿@model AlmostAdmin.ViewModels.SimilarQuestionsViewModel
+
+<div>
+    @if (!Model.SimilarQuestions.Any())
+    {
+        <div>
+            <b>Похожих вопросов не найдено!</b>
+        </div>
+    }
+    @foreach (var question in Model.SimilarQuestions)
+    {
+        <div>
+            <i>@question.Text</i>
+            <br />
+            @if (question.Answer != null)
+            {
+                @: Ответ: @question.Answer.Text
+                <br />
+                <button class="btn btn-default" onclick="approveSystemAnswer(@Model.QuestionId, @question.AnswerId, true)">Выбрать этот ответ</button>
+
+                <hr/>
+            }
+        </div>
+    }
+</div>

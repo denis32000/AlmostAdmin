@@ -19,4 +19,4 @@ C:\Users\Fancy\Source\Repos\AlmostAdmin\AlmostAdmin\obj\Debug\netcoreapp2.0\Almo
 C:\Users\Fancy\Source\Repos\AlmostAdmin\AlmostAdmin\obj\Debug\netcoreapp2.0\AlmostAdmin.AssemblyInfo.cs
 C:\Users\Fancy\Source\Repos\AlmostAdmin\AlmostAdmin\obj\Debug\netcoreapp2.0\AlmostAdmin.dll
 C:\Users\Fancy\Source\Repos\AlmostAdmin\AlmostAdmin\obj\Debug\netcoreapp2.0\AlmostAdmin.pdb
-C:\Users\Denis32\Documents\Visual Studio 2017\Projects\AlmostAdmin\AlmostAdmin\obj\Debug\netcoreapp2.0\AlmostAdmin.csprojResolveAssemblyReference.cache
+C:\Users\Denis32\Documents\Visual Studio 2017\Projects\AlmostAdmin\AlmostAdmin\obj\Debug\netcoreapp2.0\AlmostAdmin.csprojAssemblyReference.cache

@@ -1,18 +1,16 @@
 ﻿@model IEnumerable<AlmostAdmin.Models.User>
 
 <div>
-    <table class="table table-bordered">
-        @foreach(var user in Model)
+    <ul class="list-group">
+        @foreach (var user in Model)
         {
-            <tr>
-                <td>
+           <li class="list-group-item">
                     @user.Email
-                    @if(user.Email == User.Identity.Name)
+                    @if (user.Email == User.Identity.Name)
                     {
                         @:(<span style="color:forestgreen">Вы</span>)
                     }
-                </td>
-            </tr>
+           </li>
         }
-    </table>
+        </ul>
 </div>

@@ -48,11 +48,10 @@ namespace AlmostAdmin.Data
 
                     var query = new BooleanQuery();
                     var keywordsQuery = parser.Parse(questionText);
-                    var phraseQuery = new PhraseQuery();
-                    phraseQuery.Add(new Term("pId", projectId.ToString()));
+                    var queryByProjectId = NumericRangeQuery.NewInt32Range("pId", projectId, projectId, true, true);
 
                     query.Add(keywordsQuery, Occur.SHOULD);
-                    //query.Add(phraseQuery, Occur.MUST);
+                    query.Add(queryByProjectId, Occur.MUST);
 
                     var docs = searcher.Search(query, 10);
                     var searchResults = new List<LuceneSearchResult>();

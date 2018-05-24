@@ -50,28 +50,20 @@ namespace AlmostAdmin.Services
 
             if (_intelligenceRequestAdapter.GetDocumentsCount() == 0)
                 _intelligenceRequestAdapter.BuildIndexWithExistingData(_applicationContext.Questions.ToList(), true);
-           
-            var luceneSearchResults = await Task.Run(
-                () => _intelligenceRequestAdapter.Search(question.Text, question.ProjectId, 10));
 
-            if(luceneSearchResults.Count > 0)
+            var ids = GetListOfSimilarQuestionIds(question.Text, question.ProjectId);
+
+            var similarQuestions = _applicationContext.Questions
+                .Include(q => q.Answer)
+                .Where(q => ids.Contains(q.Id) && q.AnsweredByHuman)
+                .ToList();
+            
+            if (similarQuestions.Count > 0)
             {
-                var ids = luceneSearchResults
-                    .Where(r => r.Score > MinimalLuceneSimiliarity)
-                    .Select(p => p.QuestionDbId);
+                question.Answer = similarQuestions.First().Answer;
+                await _applicationContext.SaveChangesAsync();
 
-                var similarQuestions = _applicationContext.Questions
-                    .Include(q => q.Answer)
-                    .Where(q => ids.Contains(q.Id) && q.AnsweredByHuman)
-                    .ToList();
-                
-                if (similarQuestions.Count > 0)
-                {
-                    question.Answer = similarQuestions.First().Answer;
-                    await _applicationContext.SaveChangesAsync();
-
-                    TrySendQuestionAnswerAsync(questionId);
-                }
+                TrySendQuestionAnswerAsync(questionId);
             }
 
             _intelligenceRequestAdapter.AddDataToIndex(question);
@@ -90,27 +82,32 @@ namespace AlmostAdmin.Services
                 .Include(q => q.Answer)
                 .First(q => q.Id == questionId);
 
-            var luceneSearchResults = await Task.Run(
-                () => _intelligenceRequestAdapter.Search(question.Text, question.ProjectId, 10));
+            var luceneSearchResults = _intelligenceRequestAdapter.Search(question.Text, question.ProjectId, 10);
 
-            if (luceneSearchResults.Count > 0)
+            var ids = GetListOfSimilarQuestionIds(question.Text, question.ProjectId);
+
+            var similarQuestions = _applicationContext.Questions
+                .Include(q => q.Answer)
+                .Where(q => ids.Contains(q.Id) && q.Answer == null) // проверяем, что бы они были неотвеченными
+                .ToList();
+
+            foreach(var similarQuestion in similarQuestions)
             {
-                var ids = luceneSearchResults
-                    .Where(r => r.Score > MinimalLuceneSimiliarity)
-                    .Select(p => p.QuestionDbId);
-
-                var similarQuestions = _applicationContext.Questions
-                    .Include(q => q.Answer)
-                    .Where(q => ids.Contains(q.Id) && q.Answer == null) // проверяем, что бы они были неотвеченными
-                    .ToList();
-
-                foreach(var similarQuestion in similarQuestions)
-                {
-                    similarQuestion.Answer = question.Answer;
-                    await _applicationContext.SaveChangesAsync(); // TODO: rework it! bad perfomance
-                    TrySendQuestionAnswerAsync(similarQuestion.Id);
-                }
+                similarQuestion.Answer = question.Answer;
+                await _applicationContext.SaveChangesAsync(); // TODO: rework it! bad perfomance
+                TrySendQuestionAnswerAsync(similarQuestion.Id);
             }
+        }
+        
+        internal IEnumerable<int> GetListOfSimilarQuestionIds(string questionText, int projectId, int resultsCount = 10)
+        {
+            var luceneSearchResults = _intelligenceRequestAdapter.Search(questionText, projectId, resultsCount);
+
+            var ids = luceneSearchResults
+                .Where(r => r.Score > MinimalLuceneSimiliarity)
+                .Select(p => p.QuestionDbId);
+
+            return ids;
         }
 
         internal async Task UpdateStatusForAllQuestions()

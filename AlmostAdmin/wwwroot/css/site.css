@@ -1,8 +1,4 @@
-﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
-}
-
+﻿
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
@@ -45,16 +41,27 @@ th, td {
     padding: 15px;
     text-align: left;
     border: 1px solid #ddd;
+    position: relative;
 }
-tr:nth-child(even) {
-    background-color: #f2f2f2;
+
+td {
+    padding-bottom: 35px!important;
 }
+
 
 
 /* Modal window CUSTOM from GOOGLE*/
-html,body {
+html, body {
     width: 100%;
     height: 100%;
+    background-color: #f5f7fa;
+}
+
+.project-cards {
+    box-shadow: 0 0 8px 3px #00000012;
+    background-color: #fff;
+    border: none;
+    border-radius: 5px;
 }
 
 #prompt-form {
@@ -101,121 +108,49 @@ html,body {
     width: 180px;
 }
 
-
-/*------------------------------------------------------
-
-.table_all {
-    border-top: solid 1px #f2f2f2;
-    border-bottom: solid 1px #f2f2f2;
-    border-collapse: collapse;
-    font-size: 14px;
-    margin-top: 30px;
-    line-height: 23px;
-    width: 100%;
-    color: #333333;
-    text-align: left;
+.project-users {
+    position: absolute;
+    right: 22px;
+    top: 159px;
+    padding: 9px;
+    border-radius: 5px;
+    box-shadow: 0 0 13px 0px #00000033;
+    box-sizing: border-box;
+    width: 350px;
 }
 
-.border_table {
-    border-top: solid 1px #f2f2f2;
-    border-collapse: collapse;
-    height: 54px;
-    vertical-align: top;
-    line-height: 1.5;
+.table-answer__pill {
+    position: absolute;
+    right: -15px;
+    top: 40px;
+    padding: 10px;
 }
 
-.dop_table {
-    vertical-align: inherit;
-}
-
-.table_header {
-    font-size: 12px;
-    font-weight: 600;
-    color: #696969;
-    opacity: 0.54;
-    height: 28px;
-    line-height: 1.5;
-    text-align: left;
-}
-
-.table_header_one {
-    padding: 6px 9px 6px 9px;
-    width: 20%;
-}
-
-.table_header_two {
-    padding: 6px 26px 6px 9px;
-}
-
-.table_header_three {
-    padding: 6px 9px 6px 15px;
-    width: 67%;
-    background-color: #fafafa;
-}
-
-.table_block_one {
-    padding: 15px 9px 15px 9px;
-    font-weight: bold;
-    width: 20%;
-}
-
-.table_block_two {
-    padding: 15px 26px 15px 9px;
-}
-
-.table_block_two_grey {
-    padding: 15px 26px 15px 9px;
-    color: #696969;
-    opacity: 0.54;
-}
-
-.table_block_three {
-    padding: 15px 9px 15px 15px;
-    background-color: #fafafa;
-    width: 67%;
-    word-wrap: break-word;
-}
-
-.table_block_three_dop {
-    padding: 18px 18px 0 18px;
-    text-align: left;
-    background-color: #fafafa;
-    vertical-align: top;
-}
-
-.table_block_four {
-    text-align: center;
-    border-top: solid 1px #f2f2f2;
-}
-
-.table_mob {
+table td:hover .badge-dark {
     display: block;
-    position: relative;
-    width: auto;
-    margin: 0;
-    padding: 0;
-    overflow: auto;
-    clear: both;
 }
 
-.site-nav {
-    margin-right: 30px !important;
-    line-height: 45px;
+a.badge.badge-dark {
+    position: absolute;
+    bottom: 15px;
+    display: none;
 }
 
-    .site-nav:last-child {
-        margin-right: 9px !important;
-    }
-
-.page-linklast {
-    margin-right: 9px !important;
+.project-card-actions {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
 }
 
-.table_tr {
-    border-top: solid 1px #f2f2f2;
-    border-collapse: collapse;
-    font-size: 14px;
-    margin-top: 13px;
-    line-height: 23px;
-    width: 100%;
-}*/
+
+.project-users-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.table-tags {
+    position: absolute;
+    bottom: 15px;
+}

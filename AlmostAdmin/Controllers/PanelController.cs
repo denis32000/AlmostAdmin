@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AlmostAdmin.Models;
 using AlmostAdmin.Services;
+using AlmostAdmin.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Internal;
@@ -121,6 +122,110 @@ namespace AlmostAdmin.Controllers
 
             return Ok();
         }
+        
+        public async Task<ActionResult> GetProjectQuestions(int projectId, int page = 1, int priority = 0, string text = "")
+        {
+            try
+            {
+                int pageSize = 10;   // количество элементов на странице
+
+                IQueryable<Question> source = _applicationContext.Questions
+                    .Include(q => q.Answer)
+                    .Include(q => q.QuestionTags)
+                        .ThenInclude(qt => qt.Tag)
+                    .Where(q => q.ProjectId == projectId);
+
+                if (!string.IsNullOrEmpty(text))
+                {
+                    source = source.Where(q => q.Text.Contains(text) || q.Answer.Text.Contains(text));
+                }
+
+                // priority: 0-all, 1-system, 2-empty, 3-human
+                switch (priority)
+                {
+                    case 0:// all
+                        {
+                            source = source
+                                .OrderByDescending(q => !q.HasApprovedAnswer) // ответы с человеком в самом конце
+                                .ThenByDescending(q => q.Answer != null); // поднимаем в самый верх те, у которых ЕСТЬ ответ системой
+                            break;
+                        }
+                    case 1:// system
+                        {
+                            source = source.Where(q => q.Answer != null && !q.HasApprovedAnswer);
+                            break;
+                        }
+                    case 2:// empty
+                        {
+                            source = source.Where(q => q.Answer == null);
+                            break;
+                        }
+                    case 3:// human
+                        {
+                            source = source.Where(q => q.Answer != null && q.HasApprovedAnswer);
+                            break;
+                        }
+                }
+
+                var count = await source.CountAsync();
+                var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+                var pageViewModel = new PageViewModel(count, page, pageSize);
+                var viewModel = new QuestionsViewModel
+                {
+                    PageViewModel = pageViewModel,
+                    Questions = items
+                };
+
+                return PartialView("_GetProjectQuestions", viewModel);
+            }
+            catch (Exception ex)
+            {
+                return Content("Ошибка поиска данных.<br\\>" + ex.Message + ex.InnerException?.Message);
+            }
+        }
+
+        public ActionResult GetSimilar(int questionId)
+        {
+            var question = _applicationContext.Questions
+                .Include(q => q.Answer)
+                .First(q => q.Id == questionId);
+
+            var ids = _processorService.GetListOfSimilarQuestionIds(question.Text, question.ProjectId);
+
+            var similarQuestions = _applicationContext.Questions
+                .Include(q => q.Answer)
+                .Where(q => ids.Contains(q.Id))
+                .OrderByDescending(q => q.Answer != null)
+                .ToList();
+
+            var viewModel = new SimilarQuestionsViewModel
+            {
+                QuestionId = questionId,
+                SimilarQuestions = similarQuestions
+            };
+
+            return PartialView("_SimilarQuestions", viewModel);
+        }
+
+        public async Task<ActionResult> Approve(int questionId, int answerId)
+        {
+            var question = _applicationContext.Questions.FirstOrDefault(q => q.Id == questionId);
+
+            if (question == null)
+                return Json(new Result { Message = "Parameter questionId" });
+
+            var answer = _applicationContext.Answers.FirstOrDefault(a => a.Id == answerId);
+
+            if (answer == null)
+                return Json(new Result { Message = "Parameter answerId" });
+
+            question.Answer = answer;
+            question.ApprovedByHuman = true;
+            await _applicationContext.SaveChangesAsync();
+
+            return Json(new Result { Success = true });
+        }
 
         [HttpPost]
         public async Task<JsonResult> InviteUser(int projectId, string emailToInvite)
@@ -152,7 +257,7 @@ namespace AlmostAdmin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ActivateFastAnswers(int projectId)
+        public async Task<IActionResult> SwitchFastAnswers(int projectId)
         {
             var project = _applicationContext.Projects
                 .FirstOrDefault(p => p.Id == projectId);
@@ -160,26 +265,12 @@ namespace AlmostAdmin.Controllers
             if (project == null)
                 return Json(new Result { Message = "Parameter projectId" });
 
-            project.AnswerWithoutApprove = true;
+            project.AnswerWithoutApprove = !project.AnswerWithoutApprove;
             await _applicationContext.SaveChangesAsync();
 
             return Json(new Result { Success = true });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> DeactivateFastAnswers(int projectId)
-        {
-            var project = _applicationContext.Projects
-                .FirstOrDefault(p => p.Id == projectId);
-
-            if(project == null)
-                return Json(new Result { Message = "Parameter projectId" });
-
-            project.AnswerWithoutApprove = false;
-            await _applicationContext.SaveChangesAsync();
-
-            return Json(new Result { Success = true });
-        }
         //public IActionResult ProjectUsers()
         //{
         //    return PartialView("", _project);
