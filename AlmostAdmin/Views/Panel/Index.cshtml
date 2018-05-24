@@ -10,237 +10,130 @@
         <li><a asp-action="Answers">Список ответов за всё время</a></li>
     </ol>*@
 <br />
-<br />
-<br />
-<br />
-
-<div class="row">
-    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-        <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Вопросы / Ответы</a>
-        <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Участники</a>
-        <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">Настройки</a>
-    </div>
-    <div class="tab-content" id="v-pills-tabContent">
-        <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">...</div>
-        <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">...</div>
-        <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">...</div>
-    </div>
-</div>
-
-
-
-<div class="project-users bg-light">
-    <div class="project-users-button mb-2">
-        Участники проекта
-        @if (owner.Email.Equals(User.Identity.Name))
-        {
-            <button class="btn btn-sm btn-outline-dark" onclick="inviteNewUsers(@Model.Id)">Пригласить</button>
-            @*<button class="btn btn-sm btn-outline-dark" onclick="usersStats(@Model.Id)">Статистика</button>*@
-        }
-    </div>
-    @Html.Partial("_ProjectUsers", Model.UserProjects.Select(up => up.User))
-</div>
-
-
-
-<div class="row mt-3">
-    <div class="col-md-12">
+<div>
+    <div>
         <h1 class="display-4">
             @Model.Name
         </h1>
         <hr />
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <div id="accordion">
-            <div class="card">
-                <div class="card-header" id="headingOne">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            Данные для API
-                        </button>
-                    </h5>
-                </div>
-
-                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                    <div class="card-body">
-                        <div class="col-md-4">
-
-                            <div class="form-group">
-                                <label>Идентификатор:</label>
-                                <input type="text" value="@Model.Id" class="form-control col-md-4" readonly />
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="form-group">
-                                <label>Приватный ключ:</label>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="basic-addon1"><i class="fas fa-lock"></i></span>
-                                    </div>
-                                    <input type="text" class="form-control col-md-10" value="@Model.PrivateKey" aria-label="Username" aria-describedby="basic-addon1" readonly>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header" id="headingTwo">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            Collapsible Group Item #2
-                        </button>
-                    </h5>
-                </div>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-                    <div class="card-body">
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header" id="headingThree">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                            Collapsible Group Item #3
-                        </button>
-                    </h5>
-                </div>
-                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                    <div class="card-body">
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         <div class="row">
-            <div class="col-md-7">
-                <h4 class="mb-3">Данные для API</h4>
-                <div class="row">
-                    <div class="col-md-4">
+            <div class="col-3">
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Вопросы / Ответы</a>
+                    <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Участники</a>
+                    <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">Настройки</a>
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="tab-content" id="v-pills-tabContent">
+                    @*////////////////////////////////////////////////////////////////////////*@
+                    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
 
-                        <div class="form-group">
-                            <label>Идентификатор:</label>
-                            <input type="text" value="@Model.Id" class="form-control col-md-4" readonly />
+                        <div class="btn-group">
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-align-left"></i> Фильтрация
+                                    <span class="caret"></span>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <ul class="list-group" id="mainSortUl">
+                                        <li class="list-group-item" onclick="SelectNavItem(0)">Все</li>
+                                        <li class="list-group-item" onclick="SelectNavItem(1)">Ответ от системы</li>
+                                        <li class="list-group-item" onclick="SelectNavItem(2)">Без ответа</li>
+                                        <li class="list-group-item" onclick="SelectNavItem(3)">Ответ от модератора</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-success" data-toggle="modal" data-target="#createQuestionModal" type="button"><i class="fas fa-plus"></i> Создать вопрос</button>
+
+                            <div class="input-group mb-3">
+                                <input id="tagTextInput" type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+                                <div class="input-group-prepend">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="addSearchingTag($('#tagTextInput').val())">Добавить тэг</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div >
+                                <div id="questionsTableContainer" style=""></div>
+                                @* scroll bar *@
                         </div>
                     </div>
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <label>Приватный ключ:</label>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-lock"></i></span>
+
+                    @*////////////////////////////////////////////////////////////////////////*@
+                    <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                        <div class="row">
+                            <h4 class="mb-3">Активность участников проекта</h4>
+                            <div id="container" class="project-cards" style="min-width: 365px; max-width: 800px; height: 300px; margin: 0 auto"></div>
+                        </div>
+                        <div class="row">
+                            <div class="project-users bg-light">
+                                <div class="project-users-button mb-2">
+                                    Участники проекта
+                                    @if (owner.Email.Equals(User.Identity.Name))
+                                    {
+                                        <button class="btn btn-sm btn-outline-dark" onclick="inviteNewUsers(@Model.Id)">Пригласить</button>
+                                        @*<button class="btn btn-sm btn-outline-dark" onclick="usersStats(@Model.Id)">Статистика</button>*@
+                                    }
                                 </div>
-                                <input type="text" class="form-control col-md-10" value="@Model.PrivateKey" aria-label="Username" aria-describedby="basic-addon1" readonly>
+                                @Html.Partial("_ProjectUsers", Model.UserProjects.Select(up => up.User))
+                            </div>
+                        </div>
+                    </div>
+
+                    @*////////////////////////////////////////////////////////////////////////*@
+                    <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+                        <h4 class="mb-3">Данные для API</h4>
+                        <div class="row">
+                            <div class="col-md-4">
+
+                                <div class="form-group">
+                                    <label>Идентификатор:</label>
+                                    <input type="text" value="@Model.Id" class="form-control col-md-4" readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label>Приватный ключ:</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1"><i class="fas fa-lock"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control col-md-10" value="@Model.PrivateKey" aria-label="Username" aria-describedby="basic-addon1" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="card project-cards">
+                                <div class="card-body">
+                                    <h5 class="card-title">Вы можете установить приоритет отправки ответов</h5>
+                                    <p class="card-text">
+
+                                        В случае, если Вы хотите получать ответы в режиме онлайн без подтверждения администрацией
+                                        Вы можете активировать опцию "Быстрые ответы", и система сама будет подбирать возможный ответ
+                                        <span style="color:forestgreen">* Ответ на вопрос будет в ожидании подтверждения человеком и если он изменится, ответ будет отправлен на Ваш ресурс повторно!</span>
+                                    </p>
+                                    @if (!Model.AnswerWithoutApprove)
+                                    {
+                                        <button class="btn btn-success" onclick="switchFastAnswers()">Активировать "Быстрые ответы"</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-danger" onclick="switchFastAnswers()">Деактивировать "Быстрые ответы"</button>
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="card project-cards">
-                        <div class="card-body">
-                            <h5 class="card-title">Вы можете установить приоритет отправки ответов</h5>
-                            <p class="card-text">
-
-                                В случае, если Вы хотите получать ответы в режиме онлайн без подтверждения администрацией
-                                Вы можете активировать опцию "Быстрые ответы", и система сама будет подбирать возможный ответ
-                                <span style="color:forestgreen">* Ответ на вопрос будет в ожидании подтверждения человеком и если он изменится, ответ будет отправлен на Ваш ресурс повторно!</span>
-                            </p>
-                            @if (!Model.AnswerWithoutApprove)
-                            {
-                                <button class="btn btn-success" onclick="switchFastAnswers()">Активировать "Быстрые ответы"</button>
-                            }
-                            else
-                            {
-                                <button class="btn btn-danger" onclick="switchFastAnswers()">Деактивировать "Быстрые ответы"</button>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-5 mb-5">
-                <h4 class="mb-3">Активность участников проекта</h4>
-                <div id="container" class="project-cards" style="min-width: 365px; max-width: 800px; height: 300px; margin: 0 auto"></div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-12">
-
-
-    </div>
-</div>
-
-<div class="row mt-4">
-    <div class="col-md-12">
-        <h5>Сортировка вопросов</h5>
-        <hr />
-    </div>
-
-</div>
-
-<div class="row justify-content-between mb-3">
-    <div class="col-md-3 text-right">
-        <div class="dropdown">
-            <button class="btn btn-outline-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                <i class="fas fa-align-left"></i> Сортировка
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a href="#">HTML</a></li>
-                <li><a href="#">CSS</a></li>
-                <li><a href="#">JavaScript</a></li>
-            </ul>
-        </div>
-    </div>
-
-</div>
 
 @* Модальное окно для СОЗДАТЬ ВОПРОС *@
 <div class="modal fade" id="createQuestionModal" tabindex="-1" role="dialog">
@@ -253,21 +146,12 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form onsubmit="createNewQuestion(event)" id="myForm">
-                    <input name="projectId" type="hidden" value="@Model.Id" />
-                    @*<input name="questionText" title="Введите текст вопроса" />*@
-                    <textarea name="questionText" cols="40" rows="3" placeholder="Введите текст вопроса"></textarea>
-
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary" data-dismiss="modal">Создать</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                    </div>
-                </form>
+                <textarea id="newQuestionInput" name="questionText" cols="40" rows="3" placeholder="Введите текст вопроса"></textarea>
             </div>
-            @*<div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Создать вопрос</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                </div>*@
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="createNewQuestion($('#newQuestionInput').val())">Создать вопрос</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            </div>
         </div>
     </div>
 </div>
@@ -283,10 +167,10 @@
                 </button>
             </div>
             <div class="modal-body">
-                <textarea name="questionText" id="answerOnQuestionInput" class="col-md-12" rows="3" placeholder="Введите текст вопроса"></textarea>
+                <textarea name="questionText" id="answerOnQuestionInput" class="col-md-12" rows="3" placeholder="Введите текст ответа"></textarea>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Ответить</button>
+                <button type="button" class="btn btn-primary" onclick="answerOnQuestion($('#answerOnQuestionInput').val())">Ответить</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
             </div>
         </div>
@@ -312,34 +196,6 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-3" style="border-right: 1px solid #00000029;height: 427px;display: flex;flex-direction: column;justify-content: space-between;">
-        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-            @*<a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" role="tab" aria-controls="v-pills-home" aria-selected="true">Все</a>
-                <a class="nav-link" id="v-pills-profile-tab"  data-toggle="pill" role="tab" aria-controls="v-pills-profile" aria-selected="false">Без ответа</a>
-                <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" role="tab" aria-controls="v-pills-messages" aria-selected="false">Ответ от модератора</a>
-                <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" role="tab" aria-controls="v-pills-settings" aria-selected="false">Ответ от системы</a>*@
-
-            @*<button onclick="filterQuestionsByPriority(0)">Все</button>
-                <button onclick="filterQuestionsByPriority(1)">Ответ от системы</button>
-                <button onclick="filterQuestionsByPriority(2)">Без ответа</button>
-                <button onclick="filterQuestionsByPriority(3)">Ответ от модератора</button>*@
-
-            <ul class="list-group" id="mainSortUl">
-                <li class="list-group-item" onclick="SelectNavItem(0)">Все</li>
-                <li class="list-group-item" onclick="SelectNavItem(1)">Ответ от системы</li>
-                <li class="list-group-item" onclick="SelectNavItem(2)">Без ответа</li>
-                <li class="list-group-item" onclick="SelectNavItem(3)">Ответ от модератора</li>
-            </ul>
-        </div>
-        <button class="btn btn-success" data-toggle="modal" data-target="#createQuestionModal" type="button"><i class="fas fa-plus"></i> Создать вопрос</button>
-    </div>
-
-    <div class="col-9">
-        <div id="questionsTableContainer" style=""></div>
-        @* scroll bar *@
-    </div>
-</div>
 
 <div id="prompt-form-container">
     <form id="prompt-form">
@@ -435,6 +291,11 @@
 
         SelectNavItem(0); // Загружаем всю инфу для 1 страницы
 
+        function addSearchingTag() {
+
+
+        }
+
         /////////////////////////////////////////// CHART ///////////////////////////////////////////
         @{
             var users = Model.UserProjects.Select(up => up.User.UserName);
@@ -452,11 +313,7 @@
             @: usersList.push('@kvp.Key');
             @: answersList.push(@kvp.Value);
         }
-
-        console.log(usersList);
-        console.log(answersList);
-
-
+        
         Highcharts.chart('container', {
             chart: {
                 type: 'bar'
@@ -533,18 +390,19 @@
             });
         }
 
-        function createNewQuestion(event) {
-            event.preventDefault();
-
-            $.post('@Url.Action("CreateQuestion")', $('#myForm').serialize(),
+        function createNewQuestion(questionText) {
+            $.post('@Url.Action("CreateQuestion")', //$('#myForm').serialize(),
+                {
+                    projectId: @Model.Id,
+                    questionText: questionText
+                },
                 function () {
                     LoadTableDataForCurrentPage();
             });
         }
 
         // TODO: move this function to global js file
-        function answerOnQuestion(questionId, event) {
-            event.preventDefault();
+        function answerOnQuestion(questionId) {
             showPrompt("Введите ответ на вопрос:", function (value) {
                 $.post('@Url.Action("Answer")',
                     {
