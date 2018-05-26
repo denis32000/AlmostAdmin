@@ -137,7 +137,14 @@ namespace AlmostAdmin.Controllers
 
                 if (!string.IsNullOrEmpty(text))
                 {
-                    source = source.Where(q => q.Text.Contains(text) || q.Answer.Text.Contains(text));
+                    var keyWords = text.Split(',');
+                    foreach (var keyword in keyWords)
+                    {
+                        if (string.IsNullOrEmpty(keyword))
+                            continue;
+
+                        source = source.Where(q => q.Text.Contains(keyword) || q.Answer.Text.Contains(keyword));
+                    }
                 }
 
                 // priority: 0-all, 1-system, 2-empty, 3-human
@@ -266,6 +273,29 @@ namespace AlmostAdmin.Controllers
                 return Json(new Result { Message = "Parameter projectId" });
 
             project.AnswerWithoutApprove = !project.AnswerWithoutApprove;
+            await _applicationContext.SaveChangesAsync();
+
+            return Json(new Result { Success = true });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveProjectMember(int projectId, string userId)
+        {
+            var project = _applicationContext.Projects
+                .FirstOrDefault(p => p.Id == projectId);
+
+            if (project == null)
+                return Json(new Result { Message = "Parameter projectId" });
+
+            var user = _applicationContext.Users
+                .Include(u => u.UserProjects)
+                .FirstOrDefault(p => p.Id == userId);
+
+            if (user == null)
+                return Json(new Result { Message = "Parameter userId" });
+
+            var userProject = user.UserProjects.FirstOrDefault(up => up.ProjectId == projectId);
+            user.UserProjects.Remove(userProject);
             await _applicationContext.SaveChangesAsync();
 
             return Json(new Result { Success = true });

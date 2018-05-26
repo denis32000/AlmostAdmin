@@ -21,14 +21,14 @@ namespace AlmostAdmin.Services
 
         private const float MinimalLuceneSimiliarity = 0.5f;// TODO: установить нижнюю границу похожести вопросов
 
-        private LuceneProcessor _intelligenceRequestAdapter;
+        private LuceneProcessor _luceneProcessor;
         private ApplicationContext _applicationContext;
 
-        public ProcessorService(LuceneProcessor intelligenceRequestAdapter, 
+        public ProcessorService(LuceneProcessor luceneProcessor, 
             ApplicationContext applicationContext, 
             ResponseSenderService responseSenderService)
         {
-            _intelligenceRequestAdapter = intelligenceRequestAdapter;
+            _luceneProcessor = luceneProcessor;
             _applicationContext = applicationContext;
         }
 
@@ -48,8 +48,8 @@ namespace AlmostAdmin.Services
         {
             var question = _applicationContext.Questions.First(q => q.Id == questionId);
 
-            if (_intelligenceRequestAdapter.GetDocumentsCount() == 0)
-                _intelligenceRequestAdapter.BuildIndexWithExistingData(_applicationContext.Questions.ToList(), true);
+            if (_luceneProcessor.GetDocumentsCount() == 0)
+                _luceneProcessor.BuildIndexWithExistingData(_applicationContext.Questions.ToList(), true);
 
             var ids = GetListOfSimilarQuestionIds(question.Text, question.ProjectId);
 
@@ -66,7 +66,7 @@ namespace AlmostAdmin.Services
                 TrySendQuestionAnswerAsync(questionId);
             }
 
-            _intelligenceRequestAdapter.AddDataToIndex(question);
+            _luceneProcessor.AddDataToIndex(question);
             return false;
         }
 
@@ -82,7 +82,7 @@ namespace AlmostAdmin.Services
                 .Include(q => q.Answer)
                 .First(q => q.Id == questionId);
 
-            var luceneSearchResults = _intelligenceRequestAdapter.Search(question.Text, question.ProjectId, 10);
+            var luceneSearchResults = _luceneProcessor.Search(question.Text, question.ProjectId, 10);
 
             var ids = GetListOfSimilarQuestionIds(question.Text, question.ProjectId);
 
@@ -101,7 +101,7 @@ namespace AlmostAdmin.Services
         
         internal IEnumerable<int> GetListOfSimilarQuestionIds(string questionText, int projectId, int resultsCount = 10)
         {
-            var luceneSearchResults = _intelligenceRequestAdapter.Search(questionText, projectId, resultsCount);
+            var luceneSearchResults = _luceneProcessor.Search(questionText, projectId, resultsCount);
 
             var ids = luceneSearchResults
                 .Where(r => r.Score > MinimalLuceneSimiliarity)

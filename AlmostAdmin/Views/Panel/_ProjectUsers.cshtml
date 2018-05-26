@@ -4,13 +4,19 @@
     <ul class="list-group">
         @foreach (var user in Model)
         {
-           <li class="list-group-item">
-                    @user.Email
-                    @if (user.Email == User.Identity.Name)
-                    {
-                        @:(<span style="color:forestgreen">Вы</span>)
-                    }
-           </li>
+        <li class="list-group-item">
+            @user.Email
+            @if (user.Email == User.Identity.Name)
+            {
+                @:(<span style="color:forestgreen">Вы</span>)
+            }
+            else
+            {
+                   <button type="button" class="close" aria-label="Close" onclick="removeProjectMember(@user.Id)">
+                       <span aria-hidden="true">&times;</span>
+                   </button>
+            }
+        </li>
         }
         </ul>
 </div>
