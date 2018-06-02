@@ -29,13 +29,13 @@ namespace AlmostAdmin.Controllers
         // TODO: возможность запросить ответ на вопрос по айдишнику вопроса
         // TODO: возможность получить айдишник вопроса по полному тексту вопроса 1 в 1
 
-        private MainService _mainService;
+        //private MainService _mainService;
         private ApplicationContext _applicationContext;
         private ProcessorService _processorService;
 
-        public QuestionController(MainService mainService, ApplicationContext applicationContext, ProcessorService processorService)
+        public QuestionController(RepositoryService mainService, ApplicationContext applicationContext, ProcessorService processorService)
         {
-            _mainService = mainService;
+            //_mainService = mainService;
             _applicationContext = applicationContext;
             _processorService = processorService;
         }
@@ -91,6 +91,7 @@ namespace AlmostAdmin.Controllers
                     Date = DateTime.Now,
                     Project = userProject.Project,
                     Text = questionToApi.Text,
+                    AnswerToEmail = questionToApi.AnswerToEmail,
                     StatusUrl = questionToApi.StatusUrl
                 };
 

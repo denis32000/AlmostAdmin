@@ -155,6 +155,21 @@ a.badge.badge-dark {
     bottom: 15px;
 }
 
+/*::-webkit-input-placeholder {
+    font-style: italic;
+}
+
+:-moz-placeholder {
+    font-style: italic;
+}
+
+::-moz-placeholder {
+    font-style: italic;
+}
+
+:-ms-input-placeholder {
+    font-style: italic;
+}*/
 
 /*.tag {
     font-size: 14px;

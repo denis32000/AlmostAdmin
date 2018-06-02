@@ -30,8 +30,8 @@ namespace AlmostAdmin
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddTransient<MainRepository>();
-            services.AddTransient<MainService>();
+            services.AddTransient<QuestionRepository>();
+            services.AddTransient<RepositoryService>();
 
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationContext>();

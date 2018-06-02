@@ -14,10 +14,10 @@ namespace AlmostAdmin.Controllers
     [Authorize]
     public class CabinetController : Controller
     {
-        private MainService _mainService;
+        private RepositoryService _mainService;
         private ApplicationContext _applicationContext;
 
-        public CabinetController(MainService mainService, ApplicationContext applicationContext)
+        public CabinetController(RepositoryService mainService, ApplicationContext applicationContext)
         {
             _mainService = mainService;
             _applicationContext = applicationContext;

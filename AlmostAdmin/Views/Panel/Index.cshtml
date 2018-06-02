@@ -14,20 +14,27 @@
 
 <div>
     <div>
+        @*<div class="row">
+            <div class="col-auto"></div>
+            <div>
+                <span class="fa fa-arrow-circle-right" onclick="console.log('1')"></span>
+                В кабинет
+            </div>
+        </div>*@
         <h1 class="display-4">
             @Model.Name
         </h1>
         <hr />
 
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <ul class="nav nav-tabs justify-content-center nav-fill" id="myTab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Вопросы / Ответы</a>
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><span class="fa fa-comments"></span> Вопросы и Ответы</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Участники</a>
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false"><span class="fa fa-users"></span> Участники</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Настройки</a>
+                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false"><span class="fa fa-cogs"></span> Настройки</a>
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
@@ -37,10 +44,10 @@
                 <div class="row" style="padding-top:50px">
                     <div class="col-3">
                         @*<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                                <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Вопросы / Ответы</a>
-                                <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Участники</a>
-                                <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">Настройки</a>
-                            </div>*@
+                            <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Вопросы / Ответы</a>
+                            <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Участники</a>
+                            <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">Настройки</a>
+                        </div>*@
                         <ul class="list-group" id="mainSortUl">
                             <li class="list-group-item" onclick="SelectNavItem(0)">Все</li>
                             <li class="list-group-item" onclick="SelectNavItem(1)">Ответ от системы</li>
@@ -49,31 +56,36 @@
                         </ul>
                     </div>
                     <div class="col-9">
-                        <div class="btn-group">
+                        <div class="row">
                             @*<div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-align-left"></i> Фильтрация
-                                        <span class="caret"></span>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <ul class="list-group" id="mainSortUl">
-                                            <li class="list-group-item" onclick="SelectNavItem(0)">Все</li>
-                                            <li class="list-group-item" onclick="SelectNavItem(1)">Ответ от системы</li>
-                                            <li class="list-group-item" onclick="SelectNavItem(2)">Без ответа</li>
-                                            <li class="list-group-item" onclick="SelectNavItem(3)">Ответ от модератора</li>
-                                        </ul>
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-align-left"></i> Фильтрация
+                                    <span class="caret"></span>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <ul class="list-group" id="mainSortUl">
+                                        <li class="list-group-item" onclick="SelectNavItem(0)">Все</li>
+                                        <li class="list-group-item" onclick="SelectNavItem(1)">Ответ от системы</li>
+                                        <li class="list-group-item" onclick="SelectNavItem(2)">Без ответа</li>
+                                        <li class="list-group-item" onclick="SelectNavItem(3)">Ответ от модератора</li>
+                                    </ul>
+                                </div>
+                            </div>*@
+
+                            <div class="col-3">
+                                <button class="btn btn-success" data-toggle="modal" data-target="#createQuestionModal" type="button"><i class="fas fa-plus"></i> Создать вопрос</button>
+                            </div>
+                            <div>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1"><span class="fa fa-search"></span></span>
                                     </div>
-                                </div>*@
-
-                            <button class="btn btn-success" data-toggle="modal" data-target="#createQuestionModal" type="button"><i class="fas fa-plus"></i> Создать вопрос</button>
-
-                            <div class="input-group mb-3">
-                                <input id="tagTextInput" type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
-                                <div class="input-group-prepend">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="addSearchingTag($('#tagTextInput').val())">Добавить тэг</button>
+                                    <input id="tagTextInput" type="text" class="form-control" placeholder="Слово для поиска.." aria-label="" aria-describedby="basic-addon1">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-outline-secondary" type="button" onclick="addSearchingTag($('#tagTextInput').val())">Добавить</button>
+                                    </div>
                                 </div>
                             </div>
-
                         </div>
 
                         <div id="searchingTagsContainer" style="border:2px">
@@ -81,7 +93,7 @@
                         </div>
 
                         <div>
-                            <img id="loading-image" src="~/images/25.gif" alt="Loading questions list" />
+                            <img id="loading-image" src="~/images/25.gif" alt="Loading questions list" style="margin-top:100px;margin-left:50%;margin-bottom:100px" />
                             <div id="questionsTableContainer">
                             </div>
                             @* scroll bar *@
@@ -91,17 +103,15 @@
             </div>
             @*////////////////////////////////////////////////////////////////////////*@
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                <h4 class="">Активность участников проекта</h4>
-                <div id="container" class="project-cards" style="min-width: 365px; max-width: 800px; height: 300px; margin: 0 auto"></div>
+                <h4 class="m-3">Активность участников проекта</h4>
+                <div id="container" class="" style="min-width: 365px; max-width: 800px; height: 300px; margin: 0 auto"></div>
 
-                <br />
-                <br />
+                <h4 class="m-3"> Участники проекта</h4>
                 <div class="bg-light">
                     <div class="project-users-button mb-2">
-                        Участники проекта
                         @if (owner.Email.Equals(User.Identity.Name))
                         {
-                            <button class="btn btn-sm btn-outline-dark" onclick="inviteNewUsers(@Model.Id)">Пригласить</button>
+                            <button class="btn btn-sm btn-outline-dark" onclick="showInviteNewUsersModal()">Пригласить</button>
                             @*<button class="btn btn-sm btn-outline-dark" onclick="usersStats(@Model.Id)">Статистика</button>*@
                         }
                     </div>
@@ -110,7 +120,7 @@
             </div>
             @*////////////////////////////////////////////////////////////////////////*@
             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                <h4 class="mb-3">Данные для API</h4>
+                <h4 class="m-3">Данные для API</h4>
                 <div class="row">
                     <div class="col-md-4">
 
@@ -155,117 +165,6 @@
             </div>
             @*////////////////////////////////////////////////////////////////////////*@
 
-
-
-
-
-
-
-
-            @*////////////////////////////////////////////////////////////////////////
-                <div class="tab-content" id="v-pills-tabContent">
-                    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
-
-                        <div class="btn-group">
-                            <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-align-left"></i> Фильтрация
-                                    <span class="caret"></span>
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <ul class="list-group" id="mainSortUl">
-                                        <li class="list-group-item" onclick="SelectNavItem(0)">Все</li>
-                                        <li class="list-group-item" onclick="SelectNavItem(1)">Ответ от системы</li>
-                                        <li class="list-group-item" onclick="SelectNavItem(2)">Без ответа</li>
-                                        <li class="list-group-item" onclick="SelectNavItem(3)">Ответ от модератора</li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <button class="btn btn-success" data-toggle="modal" data-target="#createQuestionModal" type="button"><i class="fas fa-plus"></i> Создать вопрос</button>
-
-                            <div class="input-group mb-3">
-                                <input id="tagTextInput" type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
-                                <div class="input-group-prepend">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="addSearchingTag($('#tagTextInput').val())">Добавить тэг</button>
-                                </div>
-                            </div>
-
-                            <div id="searchingTagsContainer"></div>
-                        </div>
-
-                        <div>
-                            <div id="questionsTableContainer" style=""></div>
-                            @* scroll bar
-                        </div>
-                    </div>
-
-                    @*////////////////////////////////////////////////////////////////////////
-                    <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                        <div class="row">
-                            <h4 class="mb-3">Активность участников проекта</h4>
-                            <div id="container" class="project-cards" style="min-width: 365px; max-width: 800px; height: 300px; margin: 0 auto"></div>
-                        </div>
-                        <div class="row">
-                            <div class="project-users bg-light">
-                                <div class="project-users-button mb-2">
-                                    Участники проекта
-                                    @if (owner.Email.Equals(User.Identity.Name))
-                                    {
-                                        <button class="btn btn-sm btn-outline-dark" onclick="inviteNewUsers(@Model.Id)">Пригласить</button>
-                                        @*<button class="btn btn-sm btn-outline-dark" onclick="usersStats(@Model.Id)">Статистика</button>
-                                    }
-                                </div>
-                                @Html.Partial("_ProjectUsers", Model.UserProjects.Select(up => up.User))
-                            </div>
-                        </div>
-                    </div>
-
-                    @*////////////////////////////////////////////////////////////////////////
-                    <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
-                        <h4 class="mb-3">Данные для API</h4>
-                        <div class="row">
-                            <div class="col-md-4">
-
-                                <div class="form-group">
-                                    <label>Идентификатор:</label>
-                                    <input type="text" value="@Model.Id" class="form-control col-md-4" readonly />
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="form-group">
-                                    <label>Приватный ключ:</label>
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="basic-addon1"><i class="fas fa-lock"></i></span>
-                                        </div>
-                                        <input type="text" class="form-control col-md-10" value="@Model.PrivateKey" aria-label="Username" aria-describedby="basic-addon1" readonly>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="card project-cards">
-                                <div class="card-body">
-                                    <h5 class="card-title">Вы можете установить приоритет отправки ответов</h5>
-                                    <p class="card-text">
-
-                                        В случае, если Вы хотите получать ответы в режиме онлайн без подтверждения администрацией
-                                        Вы можете активировать опцию "Быстрые ответы", и система сама будет подбирать возможный ответ
-                                        <span style="color:forestgreen">* Ответ на вопрос будет в ожидании подтверждения человеком и если он изменится, ответ будет отправлен на Ваш ресурс повторно!</span>
-                                    </p>
-                                    @if (!Model.AnswerWithoutApprove)
-                                    {
-                                        <button class="btn btn-success" onclick="switchFastAnswers()">Активировать "Быстрые ответы"</button>
-                                    }
-                                    else
-                                    {
-                                        <button class="btn btn-danger" onclick="switchFastAnswers()">Деактивировать "Быстрые ответы"</button>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    </div>*@
         </div>
     </div>
 </div>
@@ -303,6 +202,7 @@
                 </button>
             </div>
             <div class="modal-body">
+                <input type="hidden" id="answerOnQuestionIdInput" value="" />
                 <textarea name="questionText" id="answerOnQuestionInput" class="col-md-12" rows="3" placeholder="Введите текст ответа"></textarea>
             </div>
             <div class="modal-footer">
@@ -332,6 +232,56 @@
     </div>
 </div>
 
+@* Модальное окно для ДОБАВИТЬ ТЭГ *@
+<div class="modal fade" id="addQuestionTagModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Напишите тэг относящийся к этому вопросу</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="addTagForQuestionIdInput" value="" />
+                <input name="questionText" id="addQuestionTag" class="col-md-12" rows="3" placeholder="Введите текст ответа" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="addQuestionTag($('#addQuestionTag').val())">Добавить</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Модальное окно для ДОБАВИТЬ НОВОГО ПОЛЬЗОВАТЕЛЯ *@
+<div class="modal fade" id="addNewUserModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Напишите почту пользователя</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input name="questionText" type="email" id="addNewUserEmailInput" class="col-md-12" rows="3" placeholder="Введите почту" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="inviteNewUsers($('#addNewUserEmailInput').val())">Добавить</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        Вы успешно добавили тэг <strong id="alertTagText"></strong>
+    </div>*@
+
 @*<div id="prompt-form-container">
         <form id="prompt-form">
             <div id="prompt-message"></div>
@@ -346,6 +296,7 @@
 
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="~/lib/toasts/pnotify.custom.min.js"></script>
     <script>
 
         @*function toggleAnswerOnQuestionModal(questionId, event) {
@@ -375,7 +326,7 @@
         function LoadFilteredData(page, priority, text) {
             $('#loading-image').show();
             $('#questionsTableContainer').hide();
-            
+
             $.post('@Url.Action("GetProjectQuestions")',
             {
                 projectId: @Model.Id,
@@ -410,10 +361,12 @@
         }
 
         function filterQuestionsByPriority(priority) {
+            currentPage = 1;
             filterQuestions(priority, currentText);
         }
 
         function filterQuestionsByText(text) {
+            currentPage = 1;
             filterQuestions(currentPriority, text);
         }
 
@@ -440,7 +393,7 @@
                 '<span id="searchingTags' + searchingTags.length + '" class="badge badge-primary">' +
                     tagText +
                     //'<a><i class="remove glyphicon glyphicon-remove-sign glyphicon-white"></i></a>' +
-                    '<button type="button" onclick="removeTag(' + searchingTags.length + ',\'' + tagText + '\')" class="close" aria-label="Close">' +
+                    '<button type="button" onclick="removeSearchingTag(' + searchingTags.length + ',\'' + tagText + '\')" class="close" aria-label="Close">' +
                         '<span aria-hidden="true">&times;</span>' +
                     '</button>'+
                 '</span>';
@@ -465,7 +418,7 @@
             filterQuestionsByText(filterText);
         }
 
-        function removeTag(tagId, tagText) {
+        function removeSearchingTag(tagId, tagText) {
             // Delete html tag
             var tagHtmlId = '#searchingTags' + tagId;
             $(tagHtmlId).remove();
@@ -484,6 +437,73 @@
             console.log(searchingTags);
 
             filterQuestionsByText(filterText);
+        }
+
+        //function showAddQuestionTagModal(questionId) {
+        //    $('#addTagForQuestionIdInput').val(questionId);
+        //    $('#addQuestionTagModal').toggle();
+        //}
+
+        function addQuestionTag(questionId) {//, tagText) {
+            var inputIdentifier = '#tagInputForQuestion' + questionId;
+            var textVal = $(inputIdentifier).val();
+
+            if (!textVal) {
+                alert("Текст тэга не может быть пустым!");
+                return;
+            }
+
+            $.post('@Url.Action("AddQuestionTag")',
+                {
+                    projectId: @Model.Id,
+                    questionId: questionId,//$('#addTagForQuestionIdInput').val(),
+                    tagText: textVal//tagText
+                },
+                function (response) {
+                    if (!response.success) {
+                        new PNotify({
+                            title: 'Oh No!',
+                            text: response.message,
+                            type: 'error'
+                        });
+                        return;
+                    }
+                    else {
+                        new PNotify({
+                            title: 'Успех!',
+                            text: 'Вы добавили тэг <strong>' + textVal + '</strong>',
+                            type: 'success'
+                        });
+                        LoadTableDataForCurrentPage();
+                    }
+                });
+        }
+
+        function removeQuestionTag(questionId, tagId) {
+            $.post('@Url.Action("RemoveQuestionTag")',
+                {
+                    projectId: @Model.Id,
+                    questionId: questionId,
+                    tagId: tagId
+                },
+                function (response) {
+                    if (!response.success) {
+                        new PNotify({
+                            title: 'Oh No!',
+                            text: response.message,
+                            type: 'error'
+                        });
+                        return;
+                    }
+                    else {
+                        new PNotify({
+                            title: 'Успех!',
+                            text: 'Вы убрали тэг',
+                            type: 'success'
+                        });
+                        LoadTableDataForCurrentPage();
+                    }
+                });
         }
 
         /////////////////////////////////////////// CHART ///////////////////////////////////////////
@@ -547,13 +567,17 @@
         });
 
         function switchFastAnswers() {
-        $.post('@Url.Action("SwitchFastAnswers")',
+            $.post('@Url.Action("SwitchFastAnswers")',
                 {
                     projectId: @Model.Id
                 },
                 function (response) {
                     if (!response.success) {
-                        alert(response.message);
+                        new PNotify({
+                            title: 'Oh No!',
+                            text: response.message,
+                            type: 'error'
+                        });
                         return;
                     }
 
@@ -561,23 +585,34 @@
                 });
         }
 
-        function inviteNewUsers(projectId) {
-            showPrompt("Введите почту:", function (emailToInvite) {
-                $.post('@Url.Action("InviteUser")',
-                    {
-                        projectId: projectId,
-                        emailToInvite: emailToInvite
-                    },
-                    function (response) {
-                        if (!response.success) {
-                            alert(response.message);
-                            return;
-                        }
+        function showInviteNewUsersModal() {
+            $('#addNewUserModal').modal('toggle');
+        }
 
-                        alert("Пользователь успешно добавлен в проект!");
-                        window.location = window.location;
+        function inviteNewUsers(emailToInvite) {
+            $.post('@Url.Action("InviteUser")',
+                {
+                    projectId: @Model.Id,
+                    emailToInvite: emailToInvite
+                },
+                function (response) {
+                    if (!response.success) {
+                        new PNotify({
+                            title: 'Oh No!',
+                            text: response.message,
+                            type: 'error'
+                        });
+                        return;
+                    }
+
+                    new PNotify({
+                        title: 'Успех!',
+                        text: 'Пользователь добавлен в проект!',
+                        type: 'success'
                     });
-            });
+                    alert("Пользователь успешно добавлен в проект!");
+                    window.location = window.location;
+                });
         }
 
         function createNewQuestion(questionText) {
@@ -586,26 +621,62 @@
                     projectId: @Model.Id,
                     questionText: questionText
                 },
-                function () {
+                function (response) {
+                    if (!response.success) {
+                        new PNotify({
+                            title: 'Oh No!',
+                            text: response.message,
+                            type: 'error'
+                        });
+                        return;
+                    }
                     $('#createQuestionModal').modal('toggle');
+                    new PNotify({
+                        title: 'Успех!',
+                        text: 'Вы создали новый вопрос.',
+                        type: 'success'
+                    });
+                    $('#newQuestionInput').val('');
                     LoadTableDataForCurrentPage();
             });
         }
 
         // Shows modal with textbox for answerText
+        function editAnswer(questionId, currentText) {
+            $('#answerOnQuestionInput').val(currentText);
+            $('#answerOnQuestionIdInput').val(questionId);
+            $('#answerOnQuestionModal').modal('toggle');
+        }
         function answerOnQuestion(questionId) {
-            $('#showSimilarModal').modal('toggle');
+            $('#answerOnQuestionInput').val("");
+            $('#answerOnQuestionIdInput').val(questionId);
+            $('#answerOnQuestionModal').modal('toggle');
         }
 
         function sendAnswerOnQuestion(answerText) {
             $.post('@Url.Action("Answer")',
                 {
                     projectId: @Model.Id,
-                    questionId: questionId,
-                    answerText: value
+                    questionId: $('#answerOnQuestionIdInput').val(),
+                    answerText: answerText
                 },
                 function (response) {
+
+                    if (!response.success) {
+                        new PNotify({
+                            title: 'Oh No!',
+                            text: response.message,
+                            type: 'error'
+                        });
+                        return;
+                    }
                     $('#answerOnQuestionModal').modal('toggle');
+
+                    new PNotify({
+                        title: 'Успех!',
+                        text: 'Вы ответили на вопрос.',
+                        type: 'success'
+                    });
                     LoadTableDataForCurrentPage();
                 });
         }
@@ -638,8 +709,33 @@
                 });
         }
 
+        function deleteQuestion(questionId) {
+            event.preventDefault();
+            $.post('@Url.Action("DeleteQuestion")',
+                {
+                    projectId: @Model.Id,
+                    questionId: questionId
+                },
+                function (response) {
+                    if (!response.success) {
+                        new PNotify({
+                            title: 'Oh No!',
+                            text: response.message,
+                            type: 'error'
+                        });
+                        return;
+                    }
+                    new PNotify({
+                        title: 'Успех!',
+                        text: 'Вы удалили вопрос.',
+                        type: 'success'
+                    });
+                    LoadTableDataForCurrentPage();
+                });
+        }
+
         function removeProjectMember(userId) {
-            
+
             $.post('@Url.Action("RemoveProjectMember")',
                 {
                     projectId: @Model.Id,

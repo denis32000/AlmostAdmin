@@ -15,7 +15,7 @@ namespace AlmostAdmin.Models
             Answers = new List<Answer>();
         }
 
-        public AdminLevels AdminLevel { get; set; }
+        public Permissions AdminLevel { get; set; }
 
         public virtual ICollection<UserProject> UserProjects { get; set; }
         public virtual ICollection<Answer> Answers { get; set; }

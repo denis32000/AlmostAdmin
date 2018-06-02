@@ -39,6 +39,7 @@ namespace AlmostAdmin.Models.Api
         public string Login { get; set; }
         public string Text { get; set; }
         public string StatusUrl { get; set; }
+        public bool AnswerToEmail { get; set; }
 
         public bool IsModelValid()
         {

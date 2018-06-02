@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace AlmostAdmin.Services
 {
-    public class MainService
+    public class RepositoryService
     {
-        private MainRepository _mainRepository;
+        private QuestionRepository _mainRepository;
 
-        public MainService(MainRepository mainRepository)
+        public RepositoryService(QuestionRepository mainRepository)
         {
             _mainRepository = mainRepository;
         }

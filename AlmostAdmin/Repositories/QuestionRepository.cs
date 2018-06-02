@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace AlmostAdmin.Repositories
 {
-    public class MainRepository
+    public class QuestionRepository : IQuestionRepository
     {
         private ApplicationContext _applicationContext;
 
-        public MainRepository(ApplicationContext applicationContext)
+        public QuestionRepository(ApplicationContext applicationContext)
         {
             _applicationContext = applicationContext;
         }

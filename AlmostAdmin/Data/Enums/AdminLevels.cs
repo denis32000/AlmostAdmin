@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AlmostAdmin.Data.Enums
 {
-    public enum AdminLevels
+    public enum Permissions
     {
         View,
         Edit,

@@ -22,18 +22,16 @@ namespace AlmostAdmin.Controllers
     [Authorize]
     public class PanelController : Controller
     {
-        private MainService _mainService;
+        private RepositoryService _mainService;
         private ApplicationContext _applicationContext;
         private Project _project;
         private ProcessorService _processorService;
-        private IHostingEnvironment _he;
 
-        public PanelController(MainService mainService, ApplicationContext applicationContext, ProcessorService processorService, IHostingEnvironment he)
+        public PanelController(RepositoryService mainService, ApplicationContext applicationContext, ProcessorService processorService)
         {
             _mainService = mainService;
             _applicationContext = applicationContext;
             _processorService = processorService;
-            _he = he;
         }
 
         public IActionResult Index(int projectId)
@@ -51,19 +49,19 @@ namespace AlmostAdmin.Controllers
         public async Task<IActionResult> Answer(int projectId, int questionId, string answerText)
         {
             if (string.IsNullOrEmpty(answerText))
-                return BadRequest();
+                return Json(new Result { Message = "Текст ответа не может быть пустым." });
 
             var project = _applicationContext.Projects
                 .Include(p => p.Questions)
                 .FirstOrDefault(p => p.Id == projectId);
 
             if (project == null)
-                return BadRequest();
+                return Json(new Result { Message = "Parameter projectId" });
 
             var user = _mainService.GetUserByClaims(User);
 
             if (user == null)
-                return BadRequest();
+                return Json(new Result { Message = "Ошибка с идентификацией пользователя." });
 
             var answer = new Answer
             {
@@ -76,7 +74,7 @@ namespace AlmostAdmin.Controllers
             var question = project.Questions.FirstOrDefault(q => q.Id == questionId);
 
             if (question == null)
-                return BadRequest();
+                return Json(new Result { Message = "Parameter questionId" });
 
             question.Answer = answer;
             question.AnsweredByHuman = true;
@@ -84,24 +82,23 @@ namespace AlmostAdmin.Controllers
             _applicationContext.Answers.Add(answer);
             await _applicationContext.SaveChangesAsync();
 
-            _processorService.AnswerOnSimilarQuestionsAsync(questionId);
-            //_processorService.TrySendQuestionAnswerAsync(questionId);
-            
-            return Ok();
+            _processorService.AnswerOnSimilarQuestions(questionId);
+
+            return Json(new Result { Success = true });
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateQuestion(int projectId, string questionText)// TODO: , ICollection<string> tags)
         {
             if (string.IsNullOrEmpty(questionText))
-                return BadRequest();
+                return Json(new Result { Message = "Текст вопроса не может быть пустым." });
 
             var project = _applicationContext.Projects
                 .Include(p => p.Questions)
                 .FirstOrDefault(p => p.Id == projectId);
 
             if (project == null)
-                return BadRequest();
+                return Json(new Result { Message = "Parameter projectId" });
 
             var questionTags = new List<QuestionTag>();
 
@@ -118,9 +115,9 @@ namespace AlmostAdmin.Controllers
             await _applicationContext.SaveChangesAsync();
 
             // Запускаем обработку вопроса без ожидания результата
-            _processorService.FindAnswersForQuestionAsync(question.Id, _he.ContentRootPath);
+            _processorService.FindAnswersForQuestionAsync(question.Id);
 
-            return Ok();
+            return Json(new Result { Success = true });
         }
         
         public async Task<ActionResult> GetProjectQuestions(int projectId, int page = 1, int priority = 0, string text = "")
@@ -154,22 +151,26 @@ namespace AlmostAdmin.Controllers
                         {
                             source = source
                                 .OrderByDescending(q => !q.HasApprovedAnswer) // ответы с человеком в самом конце
-                                .ThenByDescending(q => q.Answer != null); // поднимаем в самый верх те, у которых ЕСТЬ ответ системой
+                                .ThenByDescending(q => q.Answer != null)// поднимаем в самый верх те, у которых ЕСТЬ ответ системой
+                                .ThenByDescending(q => q.Date); 
                             break;
                         }
                     case 1:// system
                         {
-                            source = source.Where(q => q.Answer != null && !q.HasApprovedAnswer);
+                            source = source.Where(q => q.Answer != null && !q.HasApprovedAnswer)
+                                .OrderByDescending(q => q.Date);
                             break;
                         }
                     case 2:// empty
                         {
-                            source = source.Where(q => q.Answer == null);
+                            source = source.Where(q => q.Answer == null)
+                                .OrderByDescending(q => q.Date);
                             break;
                         }
                     case 3:// human
                         {
-                            source = source.Where(q => q.Answer != null && q.HasApprovedAnswer);
+                            source = source.Where(q => q.Answer != null && q.HasApprovedAnswer)
+                                .OrderByDescending(q => q.Date);
                             break;
                         }
                 }
@@ -196,13 +197,16 @@ namespace AlmostAdmin.Controllers
         {
             var question = _applicationContext.Questions
                 .Include(q => q.Answer)
-                .First(q => q.Id == questionId);
+                .FirstOrDefault(q => q.Id == questionId);
+
+            if (question == null)
+                return Content("Ошибка: неверный ID вопроса.");
 
             var ids = _processorService.GetListOfSimilarQuestionIds(question.Text, question.ProjectId);
 
             var similarQuestions = _applicationContext.Questions
                 .Include(q => q.Answer)
-                .Where(q => ids.Contains(q.Id))
+                .Where(q => ids.Contains(q.Id) && q.Id != questionId)
                 .OrderByDescending(q => q.Answer != null)
                 .ToList();
 
@@ -296,6 +300,94 @@ namespace AlmostAdmin.Controllers
 
             var userProject = user.UserProjects.FirstOrDefault(up => up.ProjectId == projectId);
             user.UserProjects.Remove(userProject);
+            await _applicationContext.SaveChangesAsync();
+
+            return Json(new Result { Success = true });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddQuestionTag(int projectId, int questionId, string tagText)
+        {
+            if (string.IsNullOrEmpty(tagText))
+                return Json(new Result { Message = "Parameter tagText" });
+
+            var project = _applicationContext.Projects
+                .FirstOrDefault(p => p.Id == projectId);
+
+            if (project == null)
+                return Json(new Result { Message = "Parameter projectId" });
+            
+            var question = _applicationContext.Questions
+                .Include(q => q.QuestionTags)
+                    .ThenInclude(qt => qt.Tag)
+                .FirstOrDefault(q => q.Id == questionId);
+
+            if (question == null)
+                return Json(new Result { Message = "Parameter questionId" });
+
+            if(question.QuestionTags.FirstOrDefault(qt => qt.Tag.Text == tagText) != null)
+                return Json(new Result { Message = "Такой тэг уже привязан к этому вопросу!" });
+
+            var newTag = new Tag
+            {
+                Text = tagText
+            };
+
+            var newQuestionTag = new QuestionTag
+            {
+                Question = question,
+                Tag = newTag
+            };
+
+            question.QuestionTags.Add(newQuestionTag);
+            await _applicationContext.SaveChangesAsync();
+
+            return Json(new Result { Success = true });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveQuestionTag(int projectId, int questionId, int tagId)
+        {
+            var project = _applicationContext.Projects
+                .FirstOrDefault(p => p.Id == projectId);
+
+            if (project == null)
+                return Json(new Result { Message = "Parameter projectId" });
+
+            var question = _applicationContext.Questions
+                .Include(q => q.QuestionTags)
+                    .ThenInclude(qt => qt.Tag)
+                .FirstOrDefault(q => q.Id == questionId);
+
+            if (question == null)
+                return Json(new Result { Message = "Parameter questionId" });
+
+            var questionTag = question.QuestionTags.FirstOrDefault(qt => qt.TagId == tagId);
+
+            if(questionTag == null)
+                return Json(new Result { Message = "Parameter tagId" });
+
+            question.QuestionTags.Remove(questionTag);
+            await _applicationContext.SaveChangesAsync();
+
+            return Json(new Result { Success = true });
+        }
+
+        public async Task<IActionResult> DeleteQuestion(int projectId, int questionId)
+        {
+            var project = _applicationContext.Projects
+                .FirstOrDefault(p => p.Id == projectId);
+
+            if (project == null)
+                return Json(new Result { Message = "Parameter projectId" });
+
+            var question = _applicationContext.Questions
+                .FirstOrDefault(q => q.Id == questionId);
+
+            if (question == null)
+                return Json(new Result { Message = "Parameter questionId" });
+
+            _applicationContext.Questions.Remove(question);
             await _applicationContext.SaveChangesAsync();
 
             return Json(new Result { Success = true });

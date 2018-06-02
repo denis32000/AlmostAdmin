@@ -3,6 +3,13 @@
 <div class="tab-content" id="v-pills-tabContent">
     <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
 
+        @if (Model.Questions.Count() == 0)
+        {
+            <div class="row" style="margin-top:60px;margin-left:20%;margin-bottom:60px">
+                <strong>Данных по такому запросу не найдено.</strong>
+            </div>
+        }
+
         @foreach (var question in Model.Questions)
         {
             <div class="card mb-3 project-cards">
@@ -29,8 +36,9 @@
                                 <i class="fas fa-ellipsis-h"></i>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                <button class="dropdown-item" type="button" onclick="answerOnQuestion(@question.Id)">Изменить ответ</button>
+                                <button class="dropdown-item" type="button" onclick="editAnswer(@question.Id,@question.Answer.Text)">Изменить ответ</button>
                                 <button class="dropdown-item" type="button" onclick="showSimilarTo(@question.Id)">Показать похожие</button>
+                                <button class="dropdown-item" type="button" onclick="deleteQuestion(@question.Id)">Удалить вопрос</button>
                             </div>
                         </div>
                         @*<a href="#" class="badge badge-dark" onclick="answerOnQuestion(@question.Id, event)">
@@ -56,8 +64,9 @@
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                                 <button class="dropdown-item" type="button" onclick="approveSystemAnswer(@question.Id, @question.Answer.Id, false)">Подтвердить ответ</button>
-                                <button class="dropdown-item" type="button" onclick="answerOnQuestion(@question.Id)">Изменить ответ</button>
+                                <button class="dropdown-item" type="button" onclick="editAnswer(@question.Id,@question.Answer.Text)">Изменить ответ</button>
                                 <button class="dropdown-item" type="button" onclick="showSimilarTo(@question.Id)">Показать похожие</button>
+                                <button class="dropdown-item" type="button" onclick="deleteQuestion(@question.Id)">Удалить вопрос</button>
                             </div>
                         </div>
                         @*<a href="#" class="badge badge-success" onclick="approveSystemAnswer(@question.Id, @question.Answer.Id)">
@@ -88,6 +97,7 @@
                             <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                                 <button class="dropdown-item" type="button" onclick="answerOnQuestion(@question.Id)">Ответить</button>
                                 <button class="dropdown-item" type="button" onclick="showSimilarTo(@question.Id)">Показать похожие</button>
+                                <button class="dropdown-item" type="button" onclick="deleteQuestion(@question.Id)">Удалить вопрос</button>
                             </div>
                         </div>
 
@@ -100,21 +110,38 @@
                     }
 
                     <hr />
-                    <div class="table-tags">
-                        <b>Теги:</b>
-                        [
-                        @if (question.QuestionTags.Count() > 0)
-                        {
-                            @foreach (var tag in question.QuestionTags)
+
+                    <div class="d-flex flex-wrap">
+                        @*<button class="btn btn-outline-secondary" type="button" onclick="showAddQuestionTagModal(@question.Id)">Добавить тэг</button>*@
+                        @*<b>Теги:</b>*@
+                        <div class="">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="addQuestionTag(@question.Id)"><span class="fa fa-plus"></span></button>
+                                </div>
+                                <input id="@("tagInputForQuestion" + question.Id)" type="text" class="form-control" placeholder="Добавить тэг.." aria-label="" aria-describedby="basic-addon1">
+                            </div>
+                        </div>
+                            @if (question.QuestionTags.Count() > 0)
                             {
-                                <span>@tag.Tag.Text,</span>
+                                @foreach (var tag in question.QuestionTags)
+                                {
+                                    <span class="badge badge-primary ml-1 mt-1" style="display: flex; align-items: center;">
+                                        <span class="" style="font-size:14px;">
+                                            @tag.Tag.Text
+                                        </span>
+
+                                        @*<a><i class="remove glyphicon glyphicon-remove-sign glyphicon-white"></i></a>*@
+                                        <button type="button" onclick="removeQuestionTag(@question.Id, @tag.TagId)" class="close ml-1" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </span>
+                                }
                             }
-                        }
-                        else
-                        {
-                            @: <span style="color:gray">без тегов</span>
-                        }
-                        ]
+                            else
+                            {
+                                <span style="color:gray;font-size:15px;font-style:italic;text-align:center;width:50%;">Ещё без тэгов</span>
+                            }
                     </div>
                     @*<span class="badge badge-pill badge-primary mr-2">Primary</span>
                         <span class="badge badge-pill badge-success mr-2">Success</span>
@@ -145,9 +172,20 @@
                 <li class="page-item disabled"><a class="page-link" href="#">Предыдущая</a></li>
             }
 
-            @for (int i = 1; i < 1 + Model.PageViewModel.TotalPages % 5; i++)
+            @for (int i = 1; i < 1 + Model.PageViewModel.TotalPages; i++)
             {
-                <li class="page-item active"><a class="page-link" href="#">@i</a></li>
+                if (Model.PageViewModel.PageNumber == i)
+                {
+                    <li class="page-item active">
+                        <button class="page-link" onclick="LoadTableDataForPage(@i)">@i</button>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item">
+                        <button class="page-link" onclick="LoadTableDataForPage(@i)">@i</button>
+                    </li>
+                }
             }
 
             @if (Model.PageViewModel.HasNextPage)

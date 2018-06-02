@@ -42,9 +42,8 @@ namespace AlmostAdmin.Services
         /// и присваиваю ответ на вопрос от лица системы
         /// </summary>
         /// <param name="questionId"></param>
-        /// <param name="path"></param>
         /// <returns></returns>
-        internal async Task<bool> FindAnswersForQuestionAsync(int questionId, string path = "")
+        internal async Task<bool> FindAnswersForQuestionAsync(int questionId)
         {
             var question = _applicationContext.Questions.First(q => q.Id == questionId);
 
@@ -55,7 +54,7 @@ namespace AlmostAdmin.Services
 
             var similarQuestions = _applicationContext.Questions
                 .Include(q => q.Answer)
-                .Where(q => ids.Contains(q.Id) && q.AnsweredByHuman)
+                .Where(q => ids.Contains(q.Id) && q.HasApprovedAnswer)
                 .ToList();
             
             if (similarQuestions.Count > 0)
@@ -76,7 +75,7 @@ namespace AlmostAdmin.Services
         /// </summary>
         /// <param name="questionId"></param>
         /// <returns></returns>
-        internal async Task AnswerOnSimilarQuestionsAsync(int questionId)
+        internal void AnswerOnSimilarQuestions(int questionId)
         {
             var question = _applicationContext.Questions
                 .Include(q => q.Answer)
@@ -88,13 +87,20 @@ namespace AlmostAdmin.Services
 
             var similarQuestions = _applicationContext.Questions
                 .Include(q => q.Answer)
-                .Where(q => ids.Contains(q.Id) && q.Answer == null) // проверяем, что бы они были неотвеченными
+                .Where(q => ids.Contains(q.Id) && q.Id != questionId && q.Answer == null) // проверяем, что бы они были неотвеченными
                 .ToList();
-
-            foreach(var similarQuestion in similarQuestions)
+            
+            foreach (var similarQuestion in similarQuestions)
             {
-                similarQuestion.Answer = question.Answer;
-                await _applicationContext.SaveChangesAsync(); // TODO: rework it! bad perfomance
+                similarQuestion.AnswerId = question.AnswerId;
+            }
+            _applicationContext.UpdateRange(similarQuestions);
+            _applicationContext.SaveChanges();
+
+            //var qust = _applicationContext.Questions.ToList();
+
+            foreach (var similarQuestion in similarQuestions)
+            {
                 TrySendQuestionAnswerAsync(similarQuestion.Id);
             }
         }
@@ -137,7 +143,7 @@ namespace AlmostAdmin.Services
                 return false;
 
             // Если проект запрещает отправлять ответ без подтверждения модератора И ответ дан не модератором
-            if (!question.Project.AnswerWithoutApprove && !question.AnsweredByHuman)
+            if (!question.Project.AnswerWithoutApprove && !question.HasApprovedAnswer)
                 return false;
 
             if(question.AnswerToEmail)
@@ -157,7 +163,7 @@ namespace AlmostAdmin.Services
                 QuestionId = question.Id,
                 AnswerText = question.Answer.Text,
                 QuestionText = question.Text,
-                StatusCode = question.AnsweredByHuman ? StatusCode.AnswerByHuman : StatusCode.AnswerBySystem
+                StatusCode = question.HasApprovedAnswer ? StatusCode.AnswerByHuman : StatusCode.AnswerBySystem
             };
 
             var answerOnStatusJson = JsonConvert.SerializeObject(answerOnStatus);

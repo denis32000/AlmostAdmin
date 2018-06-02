@@ -9,17 +9,23 @@
     }
     @foreach (var question in Model.SimilarQuestions)
     {
-        <div>
-            <i>@question.Text</i>
-            <br />
-            @if (question.Answer != null)
-            {
-                @: Ответ: @question.Answer.Text
-                <br />
-                <button class="btn btn-default" onclick="approveSystemAnswer(@Model.QuestionId, @question.AnswerId, true)">Выбрать этот ответ</button>
-
-                <hr/>
-            }
+        <div class="row">
+            <div class="col-6">
+                <i>@question.Text</i>
+            </div>
+            <div class="col-6">
+                @if (question.Answer != null)
+                {
+                    @question.Answer.Text
+                    <br />
+                    <button class="btn btn-default" onclick="approveSystemAnswer(@Model.QuestionId, @question.AnswerId, true)">Выбрать этот ответ</button>
+                }
+                else
+                {
+                    @: Без ответа.
+                }
+            </div>
         </div>
+        <hr />
     }
 </div>

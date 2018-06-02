@@ -11,7 +11,9 @@
 *@
 
 <br/> 
-<p style="font-style:italic">Заметка: eсли Вы не можете найти среди перечисленных нужный - запросите приглашение у создателя проекта!</p>
+<div class="alert alert-info" role="alert">
+    <strong>Заметка!</strong> Eсли Вы не можете найти среди перечисленных нужный - запросите приглашение у создателя проекта!
+</div>
 
 <div class="row align-items-center">
     <div class="col-md-8">
@@ -30,14 +32,20 @@
     {
         var owner = project.UserProjects.First().User;
         var questionsWithoutAnswer = project.Questions.Count(q => q.Answer == null);
-        var questionsAnsweredBySystem = project.Questions.Count(q => q.Answer != null && !q.AnsweredByHuman);
+        var questionsAnsweredBySystem = project.Questions.Count(q => q.Answer != null && !q.HasApprovedAnswer);
 
         <div class="col-md-4">
 
             <div class="card bg-light">
                 <div class="card-body">
                     <h5 class="card-title">@project.Name</h5>
-                    <p class="card-text">Создатель проекта: @owner.Email</p>
+                    <p class="card-text">
+                        Создатель проекта: @owner.Email
+                        @if (owner.Email == User.Identity.Name)
+                        {
+                            @:(<span style="color:forestgreen">Вы</span>)
+                        }
+                    </p>
                     <p class="card-text">Кол-во участников: @project.UserProjects.Count()</p>
                     <p class="card-text">Неотвеченных вопросов: @questionsWithoutAnswer / @project.Questions.Count()</p>
                     <p class="card-text">Вопросов отвеченных системой: @questionsAnsweredBySystem</p>

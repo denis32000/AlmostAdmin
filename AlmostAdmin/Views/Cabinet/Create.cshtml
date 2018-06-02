@@ -3,26 +3,29 @@
     ViewData["Title"] = "Создание проекта";
 }
 
-<h2>Создание нового Проекта</h2>
+<br />
+<div class="alert alert-info" role="alert">
+    <strong>Заметка!</strong> Вы еще не состоите ни в одном проекте. Запросите приглашение либо создайте свой собственный проект.
+</div>
+<div class="container">
+    <div class="project-cards p-3 ml-5 col-4 ">
+        <h4>Создание нового Проекта</h4>
+        <form method="post" asp-controller="Cabinet" asp-action="CreateProject">
 
-<form method="post" asp-controller="Cabinet" asp-action="CreateProject">
-    
-    <div asp-validation-summary="ModelOnly"></div>
+            <div asp-validation-summary="ModelOnly"></div>
 
-    <div>
-        <label asp-for="Name"></label><br />
-        <input asp-for="Name" />
-        <span asp-validation-for="Name"></span>
+            <label asp-for="Name"></label>
+            <div class="input-group mb-3">
+                <input class="form-control" asp-for="Name" />
+                <span asp-validation-for="Name"></span>
+            </div>
+
+            <div>
+                <input type="submit" class="btn btn-success col-8 ml-5" value="Создать" />
+            </div>
+        </form>
     </div>
-    <p style="color:yellowgreen">
-    // TODO: тут будет поиск по почтам пользователей и кнопка добавить<br/>
-    которая добавляет пользователей в список и отправляет в контроллер :)</p>
-
-    <div>
-        <input type="submit" value="Создать" />
-    </div>
-</form>
-
+</div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
