@@ -12,7 +12,7 @@ namespace AlmostAdmin.Services
         public async Task SendEmailAsync(string emailToWhom, string subject, string message, string nameFromWhom = "Almost Admin")
         {
             var emailMessage = new MimeMessage();
-            var emailFromWhom = "postmaster@bitco.in.ua";
+            var emailFromWhom = "mail";
 
             emailMessage.From.Add(new MailboxAddress(nameFromWhom, emailFromWhom));
             emailMessage.To.Add(new MailboxAddress("", emailToWhom));
@@ -26,8 +26,8 @@ namespace AlmostAdmin.Services
             {
                 try
                 {
-                    await client.ConnectAsync("mail.bitco.in.ua", 25, false);
-                    await client.AuthenticateAsync(emailFromWhom, "3c4D*");
+                    await client.ConnectAsync("smtp", 993, true);
+                    await client.AuthenticateAsync(emailFromWhom, "password");
                     await client.SendAsync(emailMessage);
 
                     await client.DisconnectAsync(true);

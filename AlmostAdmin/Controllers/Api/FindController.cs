@@ -14,16 +14,8 @@ using Newtonsoft.Json;
 
 namespace AlmostAdmin.Controllers
 {
-    /*
-    public class QuestionPostModel
-    {
-        public string data { get; set; }
-        public string signature { get; set; }
-    }
-    */
-
     [Route("api/[controller]")]
-    public class QuestionController : Controller
+    public class FindController : Controller
     {
         // TODO: возможность присылать ответ на вопрос указывая ИД вопроса
         // TODO: возможность запросить ответ на вопрос по айдишнику вопроса
@@ -33,46 +25,46 @@ namespace AlmostAdmin.Controllers
         private ApplicationContext _applicationContext;
         private ProcessorService _processorService;
 
-        public QuestionController(RepositoryService mainService, ApplicationContext applicationContext, ProcessorService processorService)
+        public FindController(RepositoryService mainService, ApplicationContext applicationContext, ProcessorService processorService)
         {
             //_mainService = mainService;
             _applicationContext = applicationContext;
             _processorService = processorService;
         }
-
-        [HttpPost]
-        public async Task<JsonResult> Post([FromForm] string data, [FromForm]string signature)
+        
+        // GET: api/<controller>
+        /// <summary>
+        /// Get list of similar questions to provided text
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="signature"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult Get(string data, /*[FromBody]string signature, */[FromQuery]string signature/*, [FromForm]string signature*/)
         {
             try
             {
-                //string answerJson;
                 var decodedData = CryptoUtils.Base64Decode(data);
-                var questionToApi = JsonConvert.DeserializeObject<QuestionToApi>(decodedData);
+                var getQuestionsModel = JsonConvert.DeserializeObject<GetQuestions>(decodedData);
 
-                if (!questionToApi.IsModelValid())
+                if (!getQuestionsModel.IsModelValid())
                 {
                     throw new ErrorWithDataException("Some of the data parameters are invalid. Check the documentation.",
                         Models.Api.StatusCode.WrongData);
                 }
 
-                if (!Utils.ValidUrl(questionToApi.StatusUrl))
-                {
-                    throw new ErrorWithDataException("Provided URL is not valid.",
-                        Models.Api.StatusCode.WrongStatusUrl);
-                }
-
                 var user = _applicationContext.User
                     .Include(u => u.UserProjects)
                         .ThenInclude(up => up.Project)
-                    .FirstOrDefault(u => u.UserName == questionToApi.Login);
+                    .FirstOrDefault(u => u.UserName == getQuestionsModel.Login);
 
                 if (user == null)// || user.PasswordHash != questionToApi.PasswordHash)
                 {
                     throw new ErrorWithDataException("User with such email doesn't exist.",
                         Models.Api.StatusCode.WrongLoginPasswordCredentials);
                 }
-
-                var userProject = user.UserProjects.FirstOrDefault(up => up.Project.Id == questionToApi.ProjectId);
+                
+                var userProject = user.UserProjects.FirstOrDefault(up => up.Project.Id == getQuestionsModel.ProjectId);
 
                 if (userProject == null)
                 {
@@ -86,93 +78,44 @@ namespace AlmostAdmin.Controllers
                         Models.Api.StatusCode.WrongSignature);
                 }
 
-                var question = new Question
+                var questionIds = _processorService.GetListOfSimilarQuestionIds(getQuestionsModel.Text, getQuestionsModel.ProjectId, getQuestionsModel.SimilarMaxCount);
+
+                var questionList = _applicationContext.Questions
+                    .Where(q => questionIds.Contains(q.Id))
+                    .Select(q => q.Text)
+                    .ToList();
+                
+                var getQuestionResponse = new GetQuestionsResponse
                 {
-                    Date = DateTime.Now,
-                    Project = userProject.Project,
-                    Text = questionToApi.Text,
-                    AnswerToEmail = questionToApi.AnswerToEmail,
-                    StatusUrl = questionToApi.StatusUrl
-                };
-
-                _applicationContext.Questions.Add(question);
-                await _applicationContext.SaveChangesAsync();
-
-                // Запускаем обработку вопроса без ожидания результата
-                _processorService.FindAnswersForQuestionAsync(question.Id);
-
-                var answer = new AnswerOnRequest
-                {
-                    QuestionId = question.Id,
+                    QuestionText = getQuestionsModel.Text,
+                    Questions = questionList,
                     StatusCode = Models.Api.StatusCode.Success,
-                    StatusMessage = "Your question was successfully added. Wait for an answer to Status URL."
+                    StatusMessage = "List of similar questions."
                 };
-                //answerJson = JsonConvert.SerializeObject(answer);
-                return Json(answer);
+
+                return Json(getQuestionResponse);
             }
             catch (ErrorWithDataException ex)
             {
-                var answer = new AnswerOnRequest()
+                var answer = new PostQuestionResponse()
                 {
                     StatusCode = ex.StatusCode(),
                     StatusMessage = ex.Message
                 };
-                //var answerJson = JsonConvert.SerializeObject(answer);
+
                 return Json(answer);
             }
             catch (Exception ex)
             {
-                var answer = new AnswerOnRequest()
+                var answer = new PostQuestionResponse()
                 {
                     StatusCode = Models.Api.StatusCode.Error,
                     StatusMessage = ex.Message
                 };
-                //var answerJson = JsonConvert.SerializeObject(answer);
+
                 return Json(answer);
             }
         }
-        /*
-        [HttpPost]
-        public async Task<string> Post([FromBody] QuestionPostModel questionPostModel)
-        {
-        }
-        */
-
-        // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-        //
-        //// POST api/<controller>
-        //[HttpPost]
-        //public void Post([FromBody]string value)
-        //{
-        //}
-        //
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-
-        /*
         
-        // GET: api/<controller>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-        
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
-
-        */
     }
 }

@@ -162,6 +162,9 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <button class="btn btn-danger" onclick="deleteProject()">Удалить проект</button>
+                </div>
             </div>
             @*////////////////////////////////////////////////////////////////////////*@
 
@@ -222,6 +225,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
+                <h3 id="similarToQuestionText">Текст вопрса</h3>
             </div>
             <div class="modal-body" id="similarQuestionsContainer">
             </div>
@@ -696,7 +700,7 @@
                 });
         }
 
-        function showSimilarTo(questionId) {
+        function showSimilarTo(questionId, questionText) {
             event.preventDefault();
             $.post('@Url.Action("GetSimilar")',
                 {
@@ -704,6 +708,7 @@
                     questionId: questionId
                 },
                 function (response) {
+                    $('#similarToQuestionText').html(questionText);
                     $('#similarQuestionsContainer').html(response);
                     $('#showSimilarModal').modal('toggle');
                 });
@@ -740,6 +745,15 @@
                 {
                     projectId: @Model.Id,
                     userId: userId
+                },
+                function (response) {
+                    window.location = window.location;
+                });
+        }
+        function deleteProject() {
+            $.post('@Url.Action("DeleteProject")',
+                {
+                    projectId: @Model.Id
                 },
                 function (response) {
                     window.location = window.location;

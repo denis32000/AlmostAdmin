@@ -22,21 +22,21 @@ namespace AlmostAdmin.Controllers
     [Authorize]
     public class PanelController : Controller
     {
-        private RepositoryService _mainService;
+        private RepositoryService _repositoryService;
         private ApplicationContext _applicationContext;
         private Project _project;
         private ProcessorService _processorService;
 
-        public PanelController(RepositoryService mainService, ApplicationContext applicationContext, ProcessorService processorService)
+        public PanelController(RepositoryService repositoryService, ApplicationContext applicationContext, ProcessorService processorService)
         {
-            _mainService = mainService;
+            _repositoryService = repositoryService;
             _applicationContext = applicationContext;
             _processorService = processorService;
         }
 
         public IActionResult Index(int projectId)
         {
-            _project = _mainService.GetProjectById(projectId);
+            _project = _repositoryService.GetProjectById(projectId);
 
             if (_project == null)
                 return RedirectToAction("Error", "Home");
@@ -58,7 +58,7 @@ namespace AlmostAdmin.Controllers
             if (project == null)
                 return Json(new Result { Message = "Parameter projectId" });
 
-            var user = _mainService.GetUserByClaims(User);
+            var user = _repositoryService.GetUserByClaims(User);
 
             if (user == null)
                 return Json(new Result { Message = "Ошибка с идентификацией пользователя." });
@@ -82,7 +82,8 @@ namespace AlmostAdmin.Controllers
             _applicationContext.Answers.Add(answer);
             await _applicationContext.SaveChangesAsync();
 
-            _processorService.AnswerOnSimilarQuestions(questionId);
+            await _processorService.TrySendQuestionAnswerAsync(questionId);
+            _processorService.AnswerOnSimilarQuestionsAsync(questionId);
 
             return Json(new Result { Success = true });
         }
@@ -115,7 +116,7 @@ namespace AlmostAdmin.Controllers
             await _applicationContext.SaveChangesAsync();
 
             // Запускаем обработку вопроса без ожидания результата
-            _processorService.FindAnswersForQuestionAsync(question.Id);
+            await _processorService.FindAnswersForQuestionAsync(question.Id);
 
             return Json(new Result { Success = true });
         }
@@ -235,6 +236,9 @@ namespace AlmostAdmin.Controllers
             question.ApprovedByHuman = true;
             await _applicationContext.SaveChangesAsync();
 
+            await _processorService.TrySendQuestionAnswerAsync(questionId);
+            _processorService.AnswerOnSimilarQuestionsAsync(questionId);
+
             return Json(new Result { Success = true });
         }
 
@@ -251,7 +255,7 @@ namespace AlmostAdmin.Controllers
             if (project == null)
                 return Json(new Result { Message = "Parameter projectId" });
 
-            var user = _mainService.GetUserByEmail(emailToInvite);
+            var user = _repositoryService.GetUserByEmail(emailToInvite);
             if (user == null)
                 return Json(new Result { Message = "User with such email doesn't exist." });
 
@@ -393,6 +397,13 @@ namespace AlmostAdmin.Controllers
             return Json(new Result { Success = true });
         }
 
+        public IActionResult DeleteProject(int projectId)
+        {
+            var proj = _applicationContext.Projects.FirstOrDefault(p => p.Id == projectId);
+            _applicationContext.Projects.Remove(proj);
+
+            return Ok();
+        }
         //public IActionResult ProjectUsers()
         //{
         //    return PartialView("", _project);

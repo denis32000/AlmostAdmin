@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using AlmostAdmin.Models;
 using AlmostAdmin.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using AlmostAdmin.Services;
 
 namespace AlmostAdmin.Controllers
 {
@@ -34,8 +35,14 @@ namespace AlmostAdmin.Controllers
             return Json("*OK*");
         }
 
-        public IActionResult Init()
+        public async Task<IActionResult> Init()
         {
+            var emailClient = new EmailService();
+            await emailClient.SendEmailAsync(
+                "",
+                $"Ответ на вопрос",
+                "dfgdfgdfg", 
+                "nazvanie proectoa");
             // TODO: reset all answers. Debug command
             //var project
             //_applicationContext.Projects.Add();

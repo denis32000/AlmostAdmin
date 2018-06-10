@@ -62,7 +62,7 @@ namespace AlmostAdmin.Services
                 question.Answer = similarQuestions.First().Answer;
                 await _applicationContext.SaveChangesAsync();
 
-                TrySendQuestionAnswerAsync(questionId);
+                await TrySendQuestionAnswerAsync(questionId);
             }
 
             _luceneProcessor.AddDataToIndex(question);
@@ -75,7 +75,7 @@ namespace AlmostAdmin.Services
         /// </summary>
         /// <param name="questionId"></param>
         /// <returns></returns>
-        internal void AnswerOnSimilarQuestions(int questionId)
+        internal void AnswerOnSimilarQuestionsAsync(int questionId)
         {
             var question = _applicationContext.Questions
                 .Include(q => q.Answer)
@@ -99,10 +99,14 @@ namespace AlmostAdmin.Services
 
             //var qust = _applicationContext.Questions.ToList();
 
+            var tasks = new List<Task>();
+
             foreach (var similarQuestion in similarQuestions)
             {
-                TrySendQuestionAnswerAsync(similarQuestion.Id);
+                tasks.Add(TrySendQuestionAnswerAsync(similarQuestion.Id));
             }
+
+            Task.WaitAll(tasks.ToArray());
         }
         
         internal IEnumerable<int> GetListOfSimilarQuestionIds(string questionText, int projectId, int resultsCount = 10)
@@ -114,12 +118,6 @@ namespace AlmostAdmin.Services
                 .Select(p => p.QuestionDbId);
 
             return ids;
-        }
-
-        internal async Task UpdateStatusForAllQuestions()
-        {
-            // получаем с базы все вопросы без ответа и пытаемся ответить на них
-            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -189,12 +187,6 @@ namespace AlmostAdmin.Services
             var base64EncodedSha1String = CryptoUtils.Base64Encode(sha1HashedString);
 
             return base64EncodedSha1String;
-        }
-
-        internal async Task UpdateAnswerForQuestion(int questionId)
-        {
-            // значит мы получили ответ на вопрос ИЗ АПИ КОНТРОЛЛЕРА с этим идом, и можем сохранить его в базу
-            throw new NotImplementedException();
         }
     }
 }

@@ -37,7 +37,7 @@
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                                 <button class="dropdown-item" type="button" onclick="editAnswer(@question.Id,@question.Answer.Text)">Изменить ответ</button>
-                                <button class="dropdown-item" type="button" onclick="showSimilarTo(@question.Id)">Показать похожие</button>
+                                <button class="dropdown-item" type="button" onclick="showSimilarTo(@question.Id, '@question.Text')">Показать похожие</button>
                                 <button class="dropdown-item" type="button" onclick="deleteQuestion(@question.Id)">Удалить вопрос</button>
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                             <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                                 <button class="dropdown-item" type="button" onclick="approveSystemAnswer(@question.Id, @question.Answer.Id, false)">Подтвердить ответ</button>
                                 <button class="dropdown-item" type="button" onclick="editAnswer(@question.Id,@question.Answer.Text)">Изменить ответ</button>
-                                <button class="dropdown-item" type="button" onclick="showSimilarTo(@question.Id)">Показать похожие</button>
+                                <button class="dropdown-item" type="button" onclick="showSimilarTo(@question.Id, '@question.Text')">Показать похожие</button>
                                 <button class="dropdown-item" type="button" onclick="deleteQuestion(@question.Id)">Удалить вопрос</button>
                             </div>
                         </div>
@@ -96,7 +96,7 @@
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                                 <button class="dropdown-item" type="button" onclick="answerOnQuestion(@question.Id)">Ответить</button>
-                                <button class="dropdown-item" type="button" onclick="showSimilarTo(@question.Id)">Показать похожие</button>
+                                <button class="dropdown-item" type="button" onclick="showSimilarTo(@question.Id, '@question.Text')">Показать похожие</button>
                                 <button class="dropdown-item" type="button" onclick="deleteQuestion(@question.Id)">Удалить вопрос</button>
                             </div>
                         </div>
@@ -210,96 +210,3 @@
         Вперед
     </button>
 }
-
-
-@*
-
-
-
-
-    <table class="table">
-        <thead class="thead-light">
-            <tr>
-                <th scope="col" width="55%">Текст вопроса</th>
-                <th scope="col" width="45%">Ответы</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @foreach (var question in Model.Questions)
-            {
-                <tr>
-                    <td width="55%">
-                        @question.Text
-                        <br />
-                        <div class="table-tags">
-                            <b>Теги:</b>
-                            [
-                            @if (question.QuestionTags.Count() > 0)
-                            {
-                                @foreach (var tag in question.QuestionTags)
-                                {
-                                    <span>@tag.Tag.Text,</span>
-                                }
-                            }
-                            else
-                            {
-                                @: <span style="color:gray">без тегов</span>
-                            }
-                            ]
-                        </div>
-                    </td>
-                    <td width="45%">
-                        @if (question.AnsweredByHuman)
-                        {
-                            <span class="badge badge-success table-answer__pill badge-pill">Ответил Модератор</span>
-                            @question.Answer.Text <br />
-                            <a href="#" class="badge badge-dark" onclick="answerOnQuestion(@question.Id, event)">
-                                Изменить ответ
-                            </a>
-                            <a href="#" class="badge badge-info" onclick="showSimilarTo(@question.Id, event)">
-                                Показать похожие
-                            </a>
-                        }
-                        else if (question.Answer != null)
-                        {
-                            <span class="badge badge-warning table-answer__pill badge-pill">Ответила Система</span>
-                            @question.Answer.Text <br />
-
-                            <a href="#" class="badge badge-success" onclick="approveSystemAnswer(@question.Id, @question.Answer.Id, event)">
-                                Подтвердить ответ
-                            </a>
-                            <a href="#" class="badge badge-dark" onclick="toggleAnswerOnQuestionModal(@question.Id, event)">
-                                Изменить ответ
-                            </a>
-                            @*<button class="badge badge-dark" data-toggle="modal" data-target="#answerOnQuestionModal" type="button">
-                                Изменить ответ
-                            </button>*
-                            <a href="#" class="badge badge-info" onclick="showSimilarTo(@question.Id, event)">
-                                Показать похожие
-                            </a>
-                        }
-                        else
-                        {
-                            <span class="badge badge-light table-answer__pill badge-pill">Без ответа</span>
-                            <span>
-                                Этот вопрос еще без ответа!<br />
-                                <!--<button class="btn btn-sm btn-outline-success btn-lg btn-block" data-toggle="modal" data-target="#answerOnQuestionModal" type="button">
-                                    Ответить
-                                </button>-->
-
-                                <a href="#" class="btn btn-sm btn-outline-success btn-lg btn-block" onclick="answerOnQuestion(@question.Id, event)">
-                                    Ответить
-                                </a>
-                                <a href="#" class="badge badge-info" onclick="showSimilarTo(@question.Id, event)">
-                                    Показать похожие
-                                </a>
-                            </span>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-*@
